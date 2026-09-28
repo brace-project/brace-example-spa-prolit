@@ -24,6 +24,8 @@
 /vendor
 /node_modules
 /composer.lock
+/app.fe/dist
+/app.fe/src/generated-api.ts
 
 # Temporary / backup files
 *.tmp
@@ -53,5 +55,4 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
-.Trashes/
-
+/.Trashes/
