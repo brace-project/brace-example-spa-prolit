@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Dto\GreetingResponse;
+use Brace\Router\Attributes\BraceRoute;
 
 final class GreetingController
 {
@@ -17,6 +18,7 @@ final class GreetingController
      * @example $response = (new GreetingController())->get();
      * @see GreetingResponse
      */
+    #[BraceRoute('GET@/greeting', name: 'demo.greeting')]
     public function get(): GreetingResponse
     {
         $response = new GreetingResponse();

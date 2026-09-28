@@ -10,11 +10,11 @@ use Brace\Core\BraceApp;
 use Brace\SpaServe\Codegen\TypeScriptApiStubModule;
 
 AppLoader::extend(function (BraceApp $app): void {
-    $callback = [GreetingController::class, 'get'];
-    $app->router->on('GET@/api/greeting', $callback);
+    $app->router->registerClass('/api', GreetingController::class);
 
+    $callback = [GreetingController::class, 'get'];
     $api = new TypeScriptApiStubModule(
-        targetFile: __DIR__ . '/../app.fe/src/generated-api.ts',
+        targetFile: __DIR__ . '/../App.fe/src/generated-api.ts',
         autoGenerateInDevelopment: true,
     );
     $api->route(

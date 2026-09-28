@@ -32,7 +32,7 @@ AppLoader::extend(function (BraceApp $app): void {
         new RouterEvalMiddleware(),
         new RouterDispatchMiddleware([new JsonReturnFormatter($app)]),
         new SpaStaticFileServerMw(
-            bundleDir: __DIR__ . '/../app.fe/dist',
+            bundleDir: __DIR__ . '/../App.fe/dist',
             html: $html,
             excludePaths: ['/api'],
         ),
