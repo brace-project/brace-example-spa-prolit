@@ -4,11 +4,14 @@ This repository is an application-level example for a Brace backend and a TrunkJ
 
 ## Structure
 
-- `app.be/` — Brace bootstrap, modules, middleware, routes and backend source.
+- `bootstrap.php` — central project bootstrap for CLI and web execution.
+- `app.be/` — Brace init, application setup, middleware, routes and backend source.
 - `app.fe/` — complete frontend build unit: package metadata, Vite/TypeScript configuration, routed Prolit elements and generated API client.
 - `www/index.php` — Apache/front-controller entrypoint only.
 
-`app.be/bootstrap.php` changes Brace's application root so both the web entrypoint and `vendor/bin/brace` load the numbered files from `app.be/`.
+The root `bootstrap.php` is registered through Composer's `autoload.files`. Both `vendor/bin/brace` and `www/index.php` load Composer's autoloader, so both execution paths pass through the same project bootstrap before `AppLoader::loadApp()` runs.
+
+The bootstrap loads `app.be/01_init.php`. That init file sets `AppLoader::SetAppRoot(__DIR__)`, so Brace subsequently loads the numbered application files from `app.be/`. The actual Brace application is created in `app.be/02_app.php`.
 
 ### Why the Node/Vite configuration is inside app.fe
 
@@ -65,7 +68,7 @@ There is intentionally no `AppShell.ts`. The TypeScript entrypoint only register
 app.fe/src/generated-api.ts
 ```
 
-With `autoGenerateInDevelopment: true`, normal Brace bootstrap generates it in development. In addition, `app.fe/vite.config.ts` runs the module's `spa-api-build` command when Vite starts and before a production build. It can also be generated explicitly from the repository root:
+With `autoGenerateInDevelopment: true`, normal Brace application loading generates it in development. In addition, `app.fe/vite.config.ts` runs the module's `spa-api-build` command when Vite starts and before a production build. It can also be generated explicitly from the repository root:
 
 ```bash
 vendor/bin/brace spa-api-build
