@@ -1,0 +1,28 @@
+{
+  "name": "brace-example-spa-prolit",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0 --port 4000",
+    "build": "vite build",
+    "api:build": "vendor/bin/brace spa-api-build",
+    "typecheck": "pnpm run api:build && tsc --noEmit"
+  },
+  "dependencies": {
+    "@trunkjs/api-stub": "github:trunkjs/trunkjs-monorepo#main&path:/packages/api-stub",
+    "@trunkjs/browser-utils": "github:trunkjs/trunkjs-monorepo#main&path:/packages/browser-utils",
+    "@trunkjs/prolit": "github:trunkjs/trunkjs-monorepo#main&path:/packages/prolit",
+    "@trunkjs/prolit-renderer": "github:trunkjs/trunkjs-monorepo#main&path:/packages/prolit-renderer",
+    "@trunkjs/responsive": "github:trunkjs/trunkjs-monorepo#main&path:/packages/responsive",
+    "@trunkjs/router": "github:trunkjs/trunkjs-monorepo#main&path:/packages/router",
+    "@trunkjs/scope": "github:trunkjs/trunkjs-monorepo#main&path:/packages/scope",
+    "lit": "^3.3.1",
+    "lit-html": "^3.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.29",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.0",
+    "vite-plugin-run": "^0.9.1"
+  }
+}
