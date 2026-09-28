@@ -13,42 +13,17 @@ body {
   min-width: 320px;
 }
 
-tj-responsive,
-brace-example-app {
+tj-responsive {
   display: block;
   min-height: 100vh;
 }
 
-brace-example-app {
-  display: flex;
-  flex-direction: column;
-}
-
-.app-header {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 1rem;
-  align-items: baseline;
-  border-bottom: 1px solid #dbe1ec;
-  background: #ffffff;
-}
-
-.brand {
-  color: #172033;
-  font-weight: 750;
-  text-decoration: none;
-}
-
-.subtitle,
-.app-footer {
-  color: #667085;
-}
-
-.app-shell {
+router-content {
+  display: block;
   width: 100%;
   max-width: 1100px;
   margin: 0 auto;
-  flex: 1;
+  padding: 1rem;
 }
 
 .card {

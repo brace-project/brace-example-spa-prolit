@@ -14,7 +14,7 @@ AppLoader::extend(function (BraceApp $app): void {
 
     $callback = [GreetingController::class, 'get'];
     $api = new TypeScriptApiStubModule(
-        targetFile: __DIR__ . '/../App.fe/src/generated-api.ts',
+        targetFile: __DIR__ . '/../app.fe/src/generated-api.ts',
         autoGenerateInDevelopment: true,
     );
     $api->route(

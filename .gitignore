@@ -24,10 +24,10 @@
 /vendor
 /node_modules
 /composer.lock
-/App.fe/node_modules
-/App.fe/dist
-/App.fe/.vite
-/App.fe/src/generated-api.ts
+/app.fe/node_modules
+/app.fe/dist
+/app.fe/.vite
+/app.fe/src/generated-api.ts
 
 # Temporary / backup files
 *.tmp

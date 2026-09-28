@@ -23,7 +23,7 @@ AppLoader::extend(function (BraceApp $app): void {
         css: ['/assets/app.css'],
         javascript: ['/assets/app.js'],
         devEntrypoint: '/src/main.ts',
-        startElement: 'tj-responsive',
+        startHtml: '<tj-responsive><router-content></router-content></tj-responsive>',
     );
 
     $app->setPipe([
@@ -32,7 +32,7 @@ AppLoader::extend(function (BraceApp $app): void {
         new RouterEvalMiddleware(),
         new RouterDispatchMiddleware([new JsonReturnFormatter($app)]),
         new SpaStaticFileServerMw(
-            bundleDir: __DIR__ . '/../App.fe/dist',
+            bundleDir: __DIR__ . '/../app.fe/dist',
             html: $html,
             excludePaths: ['/api'],
         ),

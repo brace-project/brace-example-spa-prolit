@@ -16,7 +16,7 @@
     "brace/mod-request-laminas": "*",
     "brace/mod-router": "*",
     "brace/mod-body": "*",
-    "brace/mod-spaserve": "dev-main"
+    "brace/mod-spaserve": "dev-feat/vite-auto-html-start-html"
   },
   "repositories": [
     {
@@ -26,10 +26,10 @@
   ],
   "autoload": {
     "psr-4": {
-      "App\\": "App.be/src/"
+      "App\\": "app.be/src/"
     },
     "files": [
-      "App.be/bootstrap.php"
+      "app.be/bootstrap.php"
     ]
   },
   "require-dev": {
