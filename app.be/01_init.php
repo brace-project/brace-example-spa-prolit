@@ -2,6 +2,17 @@
 
 declare(strict_types=1);
 
-use Brace\Core\AppLoader;
+namespace App;
 
-AppLoader::SetAppRoot(__DIR__);
+use Brace\Core\AppLoader;
+use Brace\Core\BraceApp;
+use Brace\Mod\Request\Zend\BraceRequestLaminasModule;
+use Brace\Router\RouterModule;
+
+AppLoader::extend(function (): BraceApp {
+    $app = new BraceApp();
+    $app->addModule(new BraceRequestLaminasModule());
+    $app->addModule(new RouterModule());
+
+    return $app;
+});
