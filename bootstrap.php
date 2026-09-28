@@ -2,4 +2,6 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/app.be/01_init.php';
+use Brace\Core\AppLoader;
+
+AppLoader::SetAppRoot(__DIR__ . '/app.be');
