@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.15.29",
+    "sass": "^1.105.0",
     "typescript": "^5.9.2",
     "vite": "^7.1.0",
     "vite-plugin-run": "^0.9.1"
