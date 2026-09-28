@@ -29,7 +29,7 @@
       "App\\": "app.be/src/"
     },
     "files": [
-      "app.be/bootstrap.php"
+      "bootstrap.php"
     ]
   },
   "require-dev": {
