@@ -1,7 +1,7 @@
 {
-  "name": "phore/project",
-  "type": "library",
-  "description": "",
+  "name": "brace-project/brace-example-spa-prolit",
+  "type": "project",
+  "description": "Example SPA combining Brace on the backend with TrunkJS Prolit on the frontend.",
   "license": "MIT",
   "authors": [
     {
@@ -9,23 +9,34 @@
       "email": "leuffen@continue.de"
     }
   ],
+  "require": {
+    "php": ">=8.3",
+    "ext-json": "*",
+    "brace/core": "*",
+    "brace/mod-request-laminas": "*",
+    "brace/mod-router": "*",
+    "brace/mod-body": "*",
+    "brace/mod-spaserve": "dev-main"
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/brace-project/brace-mod-spaserve"
+    }
+  ],
   "autoload": {
     "psr-4": {
-      "Phore\\FileSystem\\": "src/"
+      "App\\": "App.be/src/"
     },
     "files": [
-      "src/functions.php"
+      "App.be/bootstrap.php"
     ]
-  },
-  "require": {
-    "php" : ">=8.3",
-    "ext-yaml": "*",
-    "ext-json": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "^13.2.2"
   },
-  "suggest": {
+  "scripts": {
+    "test": "phpunit"
   },
   "config": {
     "preferred-install": "source",
@@ -33,5 +44,6 @@
       "php-http/discovery": false
     }
   },
-  "minimum-stability": "dev"
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }
