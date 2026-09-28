@@ -24,9 +24,7 @@
 /vendor
 /node_modules
 /composer.lock
-/app.fe/node_modules
 /app.fe/dist
-/app.fe/.vite
 /app.fe/src/generated-api.ts
 
 # Temporary / backup files
