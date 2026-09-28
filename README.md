@@ -5,13 +5,17 @@ This repository is an application-level example for a Brace backend and a TrunkJ
 ## Structure
 
 - `bootstrap.php` — central project bootstrap for CLI and web execution.
-- `app.be/` — Brace init, application setup, middleware, routes and backend source.
+- `app.be/` — Brace init, middleware, routes and backend source.
 - `app.fe/` — complete frontend build unit: package metadata, Vite/TypeScript configuration, routed Prolit elements and generated API client.
 - `www/index.php` — Apache/front-controller entrypoint only.
 
-The root `bootstrap.php` is registered through Composer's `autoload.files`. Both `vendor/bin/brace` and `www/index.php` load Composer's autoloader, so both execution paths pass through the same project bootstrap before `AppLoader::loadApp()` runs.
+The root `bootstrap.php` is registered through Composer's `autoload.files`. Both `vendor/bin/brace` and `www/index.php` load Composer's autoloader, so both execution paths pass through the same bootstrap before `AppLoader::loadApp()` runs.
 
-The bootstrap loads `app.be/01_init.php`. That init file sets `AppLoader::SetAppRoot(__DIR__)`, so Brace subsequently loads the numbered application files from `app.be/`. The actual Brace application is created in `app.be/02_app.php`.
+`bootstrap.php` sets the Brace application root to `app.be/` via `AppLoader::SetAppRoot(__DIR__ . '/app.be')`. Brace then loads the three numbered application files from there:
+
+- `app.be/01_init.php` — creates the Brace application and registers the base modules.
+- `app.be/10_middleware.php` — configures middleware and the SPA shell.
+- `app.be/20_routes.php` — registers the demo controller and TypeScript API stub generation.
 
 ### Why the Node/Vite configuration is inside app.fe
 
