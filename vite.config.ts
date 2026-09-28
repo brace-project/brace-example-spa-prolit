@@ -32,11 +32,7 @@ export default defineConfig({
     port: 4000,
     strictPort: true,
     proxy: {
-      '/api': {
-        target: 'http://127.0.0.1:8080',
-        changeOrigin: false,
-      },
-      '^/(?!@vite/|@id/|@fs/|src/|node_modules/|.*\\.(?:js|css|ts|tsx|scss|map)$).*': {
+      '^/(?!@vite(?:/|$)|@id(?:/|$)|@fs(?:/|$)|@react-refresh$|__vite_ping$|src(?:/|$)|node_modules(?:/|$))(?!.*\\.[^/]+$).*': {
         target: 'http://127.0.0.1:8080',
         changeOrigin: false,
       },
