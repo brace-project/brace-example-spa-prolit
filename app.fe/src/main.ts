@@ -1,6 +1,6 @@
 import '@trunkjs/responsive';
 import { Router, setDefaultRouter } from '@trunkjs/router';
-import './app.css';
+import './app.scss';
 import { HomePage } from './pages/HomePage';
 
 const router = new Router([HomePage]);
