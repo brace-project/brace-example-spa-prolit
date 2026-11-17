@@ -106,13 +106,7 @@ This uses the plugin's hot-update hook: file creation and deletion are not cover
 
 The current `vite-plugin-run` configuration also runs `spa-api-build` when Vite starts (`startup: true`) and during production builds (`build: true`). Thus `pnpm dev` and `pnpm build` regenerate the API contract automatically. Unchanged output is not rewritten. The PHP backend and Composer dependencies must therefore be available in the build environment.
 
-To regenerate the stub manually, independently of Vite, use the command above or its package-script alias:
-
-```bash
-pnpm api:build
-```
-
-The generated file is ignored and must not be edited manually. `HomePage` imports `API` and `GreetingResponse` from it.
+Normally Vite handles regeneration; use `vendor/bin/brace spa-api-build` manually when needed. Module registration and HTTP requests never generate stubs. The generated file includes named API routes, typed parameters and response DTOs; unnamed routes are excluded. It is ignored and must not be edited manually. `HomePage` imports `API` and `GreetingResponse` from it.
 
 ## Declarative routing and responsive layout
 

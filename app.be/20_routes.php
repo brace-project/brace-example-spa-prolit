@@ -21,7 +21,6 @@ AppLoader::extend(function (BraceApp $app): void {
     // Unnamed routes remain available in Brace but are omitted from generated-api.ts.
     $app->addModule(new TypeScriptApiGeneratorModule(
         targetFile: __DIR__ . '/../app.fe/src/generated-api.ts',
-        autoGenerateInDevelopment: true,
         apiMountPath: $apiMountPath,
     ));
 });

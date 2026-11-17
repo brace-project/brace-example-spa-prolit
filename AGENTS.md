@@ -29,7 +29,7 @@ Die HTML-Shell wird von `ViteAutoHtml` erzeugt und verweist auf die konfiguriert
 
 ## TypeScript-API-Stubs und Build
 
-`TypeScriptApiGeneratorModule` in `app.be/20_routes.php` erzeugt `app.fe/src/generated-api.ts` aus den benannten Brace-Routen und deren PHP-Typen. Die Datei nicht manuell bearbeiten. Manueller Neuaufbau: `vendor/bin/brace spa-api-build` oder `pnpm api:build`.
+`TypeScriptApiGeneratorModule` in `app.be/20_routes.php` erzeugt `app.fe/src/generated-api.ts` aus den benannten Brace-Routen und deren PHP-Typen. Die Datei nicht manuell bearbeiten. Regulärer Generierungsweg ist ausschließlich die Vite-Integration. Manueller Neuaufbau bei Bedarf: `vendor/bin/brace spa-api-build`. Modulregistrierung und HTTP-Requests dürfen niemals Stubs generieren; die Option `autoGenerateInDevelopment` existiert nicht mehr.
 
 Die aktuelle `vite-plugin-run`-Konfiguration führt diesen Befehl beim Vite-Start (`startup: true`), beim Production-Build (`build: true`) und beim Speichern bestehender Backend-Dateien unter `app.be/` aus (200 ms Debounce). Unveränderte Ausgabe wird nicht neu geschrieben; die generierte Frontend-Datei löst keinen erneuten API-Build aus. Erstellung und Löschung von Backend-Dateien werden durch den Hot-Update-Hook nicht zuverlässig abgedeckt; dann manuell regenerieren. Überlappende Builds werden nicht serialisiert. PHP und Composer-Abhängigkeiten müssen auch im Build-Prozess verfügbar sein.
 
