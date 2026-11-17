@@ -9,21 +9,24 @@
     "typecheck": "pnpm run api:build && tsc --noEmit"
   },
   "dependencies": {
-    "@trunkjs/api-stub": "github:trunkjs/trunkjs-monorepo#main&path:/packages/api-stub",
-    "@trunkjs/browser-utils": "github:trunkjs/trunkjs-monorepo#main&path:/packages/browser-utils",
-    "@trunkjs/prolit": "github:trunkjs/trunkjs-monorepo#main&path:/packages/prolit",
-    "@trunkjs/prolit-renderer": "github:trunkjs/trunkjs-monorepo#main&path:/packages/prolit-renderer",
-    "@trunkjs/responsive": "github:trunkjs/trunkjs-monorepo#main&path:/packages/responsive",
-    "@trunkjs/router": "github:trunkjs/trunkjs-monorepo#main&path:/packages/router",
-    "@trunkjs/scope": "github:trunkjs/trunkjs-monorepo#main&path:/packages/scope",
+    "@trunkjs/api-stub": "*",
+    "@trunkjs/browser-utils": "*",
+    "@trunkjs/prolit": "*",
+    "@trunkjs/prolit-renderer": "*",
+    "@trunkjs/responsive": "*",
+    "@trunkjs/router": "*",
+    "@trunkjs/scope": "*",
     "lit": "^3.3.1",
     "lit-html": "^3.3.1"
   },
+  "workspaces": [
+    "workspaces/trunkjs-monorepo/packages/*"
+  ],
   "devDependencies": {
     "@types/node": "^22.15.29",
     "sass": "^1.105.0",
     "typescript": "^5.9.2",
     "vite": "^7.1.0",
-    "vite-plugin-run": "^0.9.1"
+    "vite-plugin-run": "^0.8.0"
   }
 }

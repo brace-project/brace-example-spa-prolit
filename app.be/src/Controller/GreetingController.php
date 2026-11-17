@@ -18,7 +18,7 @@ final class GreetingController
      * @example $response = (new GreetingController())->get();
      * @see GreetingResponse
      */
-    #[BraceRoute('GET@/greeting', name: 'demo.greeting')]
+    #[BraceRoute('GET@/greeting', name: 'Demo.Greeting')]
     public function get(): GreetingResponse
     {
         $response = new GreetingResponse();

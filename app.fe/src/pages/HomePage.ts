@@ -18,6 +18,7 @@ export class HomePage extends ProlitElement {
               This page is a routed ProlitElement. Its backend response is loaded through
               the TypeScript client generated from the Brace controller.
             </p>
+            <p><a href="/form-example">Open the form, events, table and popup example →</a></p>
             <button @click="greeting.reload()" ?disabled="greeting.pending">Reload backend greeting</button>
             <p *if="greeting.pending" role="status">Loading from Brace…</p>
             <p *if="greeting.error" role="alert">{{ greeting.error.message }}</p>

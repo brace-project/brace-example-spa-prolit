@@ -1,0 +1,14 @@
+<?php
+
+declare(strict_types=1);
+
+define('DEV_MODE', (bool) '1');
+
+// Public mount path of the browser application. Configure it only here; it is
+// assigned to BraceApp::$appBasePath and inherited by routing, SPA delivery and links.
+define('CONF_APP_BASE_PATH', '/wurst');
+
+// Independent API server/base path. It may also point to another server.
+$apiBaseUrl = '';
+define('CONF_API_BASE_URL', $apiBaseUrl !== '' ? $apiBaseUrl : CONF_APP_BASE_PATH . '/api');
+unset($apiBaseUrl);

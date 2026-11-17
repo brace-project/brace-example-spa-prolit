@@ -20,8 +20,8 @@ AppLoader::extend(function (BraceApp $app): void {
     $html = new ViteAutoHtml(
         development: $app->environmentType === EnvironmentType::DEVELOPMENT,
         title: 'Brace + Prolit Example',
-        css: ['/assets/app.css'],
-        javascript: ['/assets/app.js'],
+        css: ['assets/app.css'],
+        javascript: ['assets/app.js'],
         devEntrypoint: '/src/main.ts',
         startHtml: '<tj-responsive><router-content></router-content></tj-responsive>',
     );

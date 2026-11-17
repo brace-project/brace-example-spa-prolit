@@ -16,7 +16,9 @@
     "brace/mod-request-laminas": "*",
     "brace/mod-router": "*",
     "brace/mod-body": "*",
-    "brace/mod-spaserve": "dev-feat/vite-auto-html-start-html"
+    "brace/mod-spaserve": "dev-feat/vite-auto-html-start-html",
+    "brace/dbg": "dev-main"
+
   },
   "repositories": [
     {

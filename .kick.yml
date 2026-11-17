@@ -2,13 +2,16 @@
 # Run ./kickstart.sh to start a development-container for this project
 version: 1
 from: "ghcr.io/nfra-project/kickstart-flavor-php:unstable"
+ports: "4000:4000;4100:4100;4999:4999;80:80" ## Port 80 is forwarded to 4000 with vite.
 secrets: open_ai
 
-
+config_file:
+  template: "config.php.dist"
+  target: "config.php"
 
 command:
   init:
-    - "composer update"
+    #- "composer update"
 
   test:
     - "phpunit test/"
