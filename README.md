@@ -38,19 +38,41 @@ composer install
 pnpm install
 ```
 
-Start Brace:
+### Development: Apache + Vite
 
-```bash
-php -S 127.0.0.1:8080 -t www www/index.php
-```
+Apache runs on **port 80**, with `www/` as the document root and `www/index.php` as the Brace front controller. Docker supplies the runtime configuration in `config.php`; `DEV_MODE=1` selects `EnvironmentType::DEVELOPMENT` when constructing `BraceApp` in `app.be/01_init.php`. This application environment is independent of the debugger's host-based configuration.
 
-Start Vite in a second terminal, also from the repository root:
+Start Vite from the repository root:
 
 ```bash
 pnpm dev
 ```
 
-Open `http://127.0.0.1:4000/`. Vite serves its own development modules and assets. Every other request, including API calls and SPA navigation, is proxied to Brace.
+Open `http://localhost:4000/`. Vite runs on **port 4000** and serves TypeScript modules, SCSS/CSS and HMR. It proxies API requests and SPA navigation unchanged to Apache at `http://127.0.0.1:80`. Apache/Brace handles backend routes and generates the SPA HTML shell. In development, that shell loads `/@vite/client` and `/src/main.ts` instead of production bundles.
+
+Vite is used **only as a development server**, never as a production server. Apache also runs during development; accessing Apache directly does not itself select the production environment.
+
+### Production: Apache only
+
+Build the frontend before deploying or enabling production mode:
+
+```bash
+pnpm build
+```
+
+Vite is a build-time tool here: it generates `app.fe/dist/`, including `assets/app.js`, `assets/app.css` and lazy-loaded JavaScript chunks. Node and a running Vite server are not required to serve the deployed application.
+
+With **`DEV_MODE=0`**, `app.be/01_init.php` explicitly constructs `BraceApp` with `EnvironmentType::PRODUCTION`. The default `ViteAutoHtml` configuration and `SpaStaticFileServerMw` automatically use this BraceApp environment; no separate Vite-mode switch is necessary. Leave the optional `development` override unset to retain this automatic behavior.
+
+Open `http://localhost/` on **Apache port 80** (or the configured public host and URL prefix). Apache/Brace serves both the API and the built frontend:
+
+- `mod-spaserve` reads bundle files from `app.fe/dist/`, including CSS, JavaScript and lazy-loading chunks under `app.fe/dist/assets/`.
+- The configured `BraceApp::$url_prefix` is respected when generating asset links and resolving requests against the build directory.
+- Client-side navigation paths receive the SPA HTML shell; missing assets return HTTP 404.
+- Production HTML contains neither `@vite/client` nor `/src/main.ts` and does not depend on a Vite server.
+- `<meta name="app-env" content="production">` exposes the actual BraceApp environment in the generated HTML.
+
+The complete `app.fe/dist/` directory must be present in the deployment. Switching `DEV_MODE` does not build the bundle automatically.
 
 ## HTML shell
 
@@ -82,7 +104,9 @@ While the Vite dev server is running, `vite.config.ts` adds `app.be/` to Vite's 
 
 This uses the plugin's hot-update hook: file creation and deletion are not covered reliably, and builds are not serialized if another change occurs while a command is running.
 
-Starting Vite or running a production build does not automatically generate the stub. Generate it explicitly when needed with:
+The current `vite-plugin-run` configuration also runs `spa-api-build` when Vite starts (`startup: true`) and during production builds (`build: true`). Thus `pnpm dev` and `pnpm build` regenerate the API contract automatically. Unchanged output is not rewritten. The PHP backend and Composer dependencies must therefore be available in the build environment.
+
+To regenerate the stub manually, independently of Vite, use the command above or its package-script alias:
 
 ```bash
 pnpm api:build
