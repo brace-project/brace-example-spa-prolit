@@ -1,7 +1,6 @@
 import { ProlitElement, scopeDefine } from '@trunkjs/prolit';
 import { route } from '@trunkjs/router';
 import { customElement } from 'lit/decorators.js';
-import { FormExampleDialog } from './FormExampleDialog';
 
 type TableRow = { id: number; value: string };
 
@@ -109,6 +108,7 @@ export class FormExamplePage extends ProlitElement {
       },
       openDialog: async (): Promise<void> => {
         this.recordEvent('Prolit dialog opened');
+        const { FormExampleDialog } = await import('./FormExampleDialog');
         const result = await FormExampleDialog.show({ value: this.scope.typedValue });
         if (!result.submitted) {
           this.recordEvent('Prolit dialog cancelled');

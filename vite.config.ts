@@ -1,8 +1,32 @@
 import { defineConfig } from 'vite';
+import { run } from 'vite-plugin-run';
 import { fileURLToPath } from 'node:url';
+
+const backendRoot = fileURLToPath(new URL('./app.be', import.meta.url));
 
 export default defineConfig({
   root: 'app.fe',
+  plugins: [
+    // Reboot the SPA backend API build when a backend file changes. The generated frontend file does not trigger another API build.
+    {
+      name: 'watch-backend-directory',
+      apply: 'serve',
+      configureServer(server) {
+        server.watcher.add(backendRoot);
+      },
+    },
+    run({
+      silent: false,
+      input: [{
+        name: 'rebuild-spa-backend-api',
+        run: ['vendor/bin/brace', 'spa-api-build'],
+        pattern: '../app.be/**/*',
+        debounce: 200,
+        startup: true,
+        build: true,
+      }],
+    }),
+  ],
   base: '/',
   // Development only: Vite forwards application requests unchanged to Brace.
   // Prefix evaluation is handled exclusively by Brace and does not happen in this proxy.

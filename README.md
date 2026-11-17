@@ -78,7 +78,11 @@ as its output file. The module reads all named routes already registered on the 
 vendor/bin/brace spa-api-build
 ```
 
-The root `vite.config.ts` invokes that command through `vite-plugin-run` when Vite starts and before a production build. It can also be run explicitly with:
+While the Vite dev server is running, `vite.config.ts` adds `app.be/` to Vite's watcher. The installed `vite-plugin-run` invokes that command when an existing backend file is saved, with a 200 ms debounce. Command output appears in the dev-server terminal. The generated frontend file does not trigger another API build.
+
+This uses the plugin's hot-update hook: file creation and deletion are not covered reliably, and builds are not serialized if another change occurs while a command is running.
+
+Starting Vite or running a production build does not automatically generate the stub. Generate it explicitly when needed with:
 
 ```bash
 pnpm api:build
@@ -88,6 +92,8 @@ The generated file is ignored and must not be edited manually. `HomePage` import
 
 ## Declarative routing and responsive layout
 
-`GreetingController::get()` declares its backend route with `#[BraceRoute(...)]`; `app.be/20_routes.php` registers the controller class. `app.fe/src/pages/HomePage.ts` is likewise a class-based page decorated with `@route` and `@customElement`. `app.fe/src/main.ts` registers it with the TrunkJS Router.
+Backend controllers use the `XyCtrl` naming convention and live in `app.be/src/Ctrl/` under the `App\Ctrl` namespace.
+
+`GreetingCtrl::get()` declares its backend route with `#[BraceRoute(...)]`; `app.be/20_routes.php` registers the controller class. `app.fe/src/pages/HomePage.ts` is likewise a class-based page decorated with `@route` and `@customElement`. `app.fe/src/main.ts` registers it with the TrunkJS Router.
 
 `ViteAutoHtml` creates `<tj-responsive><router-content></router-content></tj-responsive>` as the application body. The frontend imports `@trunkjs/responsive`, and the page uses `style-md` attributes for breakpoint-specific layout instead of a resize listener.

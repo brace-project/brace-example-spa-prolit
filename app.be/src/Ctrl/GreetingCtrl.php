@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Ctrl;
 
 use App\Dto\GreetingResponse;
 use Brace\Router\Attributes\BraceRoute;
 
-final class GreetingController
+final class GreetingCtrl
 {
     /**
      * Returns the minimal backend payload used by the frontend example.
@@ -15,7 +15,7 @@ final class GreetingController
      * The endpoint performs no I/O beyond returning the DTO and has no side effects.
      *
      * @return GreetingResponse Typed response consumed through the generated TypeScript API stub.
-     * @example $response = (new GreetingController())->get();
+     * @example $response = (new GreetingCtrl())->get();
      * @see GreetingResponse
      */
     #[BraceRoute('GET@/greeting', name: 'Demo.Greeting')]

@@ -10,7 +10,6 @@ use Brace\Core\Base\ExceptionHandlerMiddleware;
 use Brace\Core\Base\JsonReturnFormatter;
 use Brace\Core\Base\NotFoundMiddleware;
 use Brace\Core\BraceApp;
-use Brace\Core\EnvironmentType;
 use Brace\Router\RouterDispatchMiddleware;
 use Brace\Router\RouterEvalMiddleware;
 use Brace\SpaServe\Html\ViteAutoHtml;
@@ -18,12 +17,12 @@ use Brace\SpaServe\SpaStaticFileServerMw;
 
 AppLoader::extend(function (BraceApp $app): void {
     $html = new ViteAutoHtml(
-        development: $app->environmentType === EnvironmentType::DEVELOPMENT,
+        apiBaseUrl: \CONF_API_BASE_URL,
         title: 'Brace + Prolit Example',
         css: ['assets/app.css'],
         javascript: ['assets/app.js'],
-        devEntrypoint: '/src/main.ts',
         startHtml: '<tj-responsive><router-content></router-content></tj-responsive>',
+        devEntrypoint: '/src/main.ts',
     );
 
     $app->setPipe([

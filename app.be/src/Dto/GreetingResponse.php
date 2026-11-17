@@ -8,7 +8,7 @@ namespace App\Dto;
 final class GreetingResponse
 {
     /**
-     * Description of the message property, which is a string containing the greeting message.
+     * Description of the message property, which is a string containing the greeting message. Wurstbrot
      * @var string
      */
     public string $message;
