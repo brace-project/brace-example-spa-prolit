@@ -16,16 +16,10 @@
     "brace/mod-request-laminas": "*",
     "brace/mod-router": "*",
     "brace/mod-body": "*",
-    "brace/mod-spaserve": "dev-feat/vite-auto-html-start-html",
+    "brace/mod-spaserve": "dev-main",
     "brace/dbg": "dev-main"
 
   },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/brace-project/brace-mod-spaserve"
-    }
-  ],
   "autoload": {
     "psr-4": {
       "App\\": "app.be/src/"
