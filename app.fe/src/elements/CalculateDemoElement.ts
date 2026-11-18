@@ -7,15 +7,15 @@ export class CalculateDemoElement extends ProlitElement {
   protected override scope = scopeDefine({
     // language=HTML
     $tpl: `
-      <section class="calculate-demo" aria-label="Backend calculation">
+      <section class="p-3 mt-4" style="background:var(--nt-surface,transparent);border-radius:var(--nt-border-radius,0.75rem)" aria-label="Backend calculation">
         <h2>Backend calculation</h2>
         <p>Brace calculates 1² + 2² + … + 1000² via POST. A 700 ms delay demonstrates loading.</p>
-        <button type="button" @click="calculation.reload()" ?disabled="calculation.pending">
+        <button class="btn btn-primary" type="button" @click="calculation.reload()" ?disabled="calculation.pending">
           Calculate again (POST)
         </button>
         <p *if="calculation.pending" role="status">Calculating on the server…</p>
         <p *if="calculation.error" role="alert">{{ calculation.error.message }}</p>
-        <p *if="calculation.data" class="result">
+        <p *if="calculation.data" class="p-3">
           {{ calculation.data.label }}: {{ calculation.data.count }} squares = <strong>{{ calculation.data.sumOfSquares }}</strong>
           ({{ calculation.data.processingMs }} ms server time)
         </p>

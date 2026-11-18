@@ -7,38 +7,27 @@ export class SettingsDialog extends ProlitDialogElement<{ count: number }, Calcu
   protected override scope = scopeDefine({
     // language=HTML
     $tpl: `
-      <div class="settings-dialog-content">
+      <div class="d-grid gap-3">
         <p>Compare a typed calculation POST with an untyped array POST.</p>
-        <label>Number of squares (1–1000)
-          <input type="number" min="1" max="1000" step="1"
-                 .value="count" @input="count = $event.currentTarget.value">
-        </label>
-        <label>Multiplier (1–10)
-          <input type="number" min="1" max="10" step="1"
-                 .value="multiplier" @input="multiplier = $event.currentTarget.value">
-        </label>
-        <label>Result label
-          <input type="text" maxlength="80" .value="label"
-                 @input="label = $event.currentTarget.value">
-        </label>
-        <button type="button" @click="$fn.calculate()" ?disabled="pending">
+        <nte-input class="default" type="text" label="Number of squares (1–1000)" .value="count" @input="count = $event.currentTarget.value"></nte-input>
+        <nte-input class="default" type="text" label="Multiplier (1–10)" .value="multiplier" @input="multiplier = $event.currentTarget.value"></nte-input>
+        <nte-input class="default" type="text" label="Result label" maxlength="80" .value="label" @input="label = $event.currentTarget.value"></nte-input>
+        <button class="btn btn-primary" type="button" @click="$fn.calculate()" ?disabled="pending">
           Calculate via typed POST
         </button>
-        <p *if="result" class="result">
+        <p *if="result" class="p-3">
           {{ result.label }}: {{ result.count }} squares = <strong>{{ result.sumOfSquares }}</strong>
           ({{ result.processingMs }} ms server time)
         </p>
-        <label>Untyped JSON array
-          <textarea rows="3" .value="anyJson" @input="anyJson = $event.currentTarget.value"></textarea>
-        </label>
-        <button type="button" @click="$fn.sendAny()" ?disabled="pending">
+        <nte-input class="default" type="textarea" label="Untyped JSON array" rows="3" .value="anyJson" @input="anyJson = $event.currentTarget.value"></nte-input>
+        <button class="btn btn-primary" type="button" @click="$fn.sendAny()" ?disabled="pending">
           Send array via POST
         </button>
-        <pre *if="anyResult" class="result">{{ anyResult }}</pre>
+        <pre *if="anyResult" class="p-3">{{ anyResult }}</pre>
         <p *if="pending" role="status">Sending request…</p>
         <p *if="error" role="alert">{{ error }}</p>
-        <div class="dialog-actions">
-          <button type="button" @click="$fn.close()" ?disabled="pending">Close</button>
+        <div class="d-flex justify-content-end gap-2">
+          <button class="btn btn-outline-secondary" type="button" @click="$fn.close()" ?disabled="pending">Close</button>
         </div>
       </div>
     `,
