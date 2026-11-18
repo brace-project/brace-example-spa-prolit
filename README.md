@@ -1,131 +1,7 @@
 # Brace + Prolit SPA example
 
 Minimal SPA with a **Brace/PHP API** and a **TrunkJS Prolit** frontend.
-Brace serves the SPA shell; Vite is used only for development and builds.
-
-## Quick start
-
-```bash
-composer install
-pnpm install
-pnpm dev
-```
-
-- Development: Apache serves `www/` on port 80; Vite runs at
-  `http://localhost:4000/` and proxies application requests to Apache.
-- Production: run `pnpm build`, deploy `app.fe/dist/`, set
-  `DEV_MODE=0`, and serve through Apache only.
-- PHP/Composer dependencies must be available during Vite builds for
-  API stub generation.
-
-## Development and production flow
-
-### Development: Vite + Apache (`DEV_MODE=1`)
-
-```text
-Browser: http://localhost:4000/
-           |
-           v
-   +--------------------------+
-   | Vite dev server :4000    |
-   | TS/SCSS modules + HMR    |
-   +--------------------------+
-      |                  |
-      | /src/*, CSS/JS   | SPA navigation, /api/*
-      | /@vite/*         | (proxy, URL unchanged)
-      v                  v
-  Vite serves       +------------------------------+
-  frontend modules  | Apache :80 / www/index.php  |
-  and HMR client    | PHP -> Brace                |
-      ^             | API routes + SPA HTML shell |
-      |             +------------------------------+
-      |                          |
-      +--- HTML references /@vite/client and /src/main.ts
-```
-
-- Apache stays active behind Vite. Brace generates the SPA HTML shell;
-  Vite supplies source modules and the HMR client rather than built assets.
-- Editing `app.fe/src/` TypeScript or SCSS triggers Vite updates;
-  its HMR connection pushes changed modules/styles to the browser,
-  preserving state where the changed module supports hot replacement.
-  Otherwise Vite may reload the page.
-- Browser API calls use the generated client and reach Brace through
-  Vite's proxy on port 4000, not through a second frontend API.
-
-### API stub generation (development and build)
-
-```text
-app.be/ named #[BraceRoute] + Ctrl + Dto
-                  |
-                  | Vite plugin watches existing app.be/** files
-                  | (200 ms debounce); also runs at startup/build
-                  v
-     vendor/bin/brace spa-api-build
-                  |
-                  v
-     TypeScriptApiGeneratorModule
-                  |
-                  v
-     app.fe/src/generated-api.ts
-                  |
-                  v
-     Vite module update / frontend imports
-     (e.g. API.Demo.Calculate.request({ body }))
-```
-
-- The **backend** `app.be/` is watched to regenerate the API
-  contract. Frontend changes under `app.fe/src/` use Vite/HMR;
-  they do not themselves cause API stub generation.
-- The generator includes named routes and their PHP request/response
-  types. It runs on `pnpm dev` startup and during `pnpm build`.
-- Creating or deleting backend files may not trigger the existing-file
-  watcher; run `vendor/bin/brace spa-api-build` manually then.
-  Never edit `generated-api.ts` by hand.
-- Typed POST bodies require the pending SPA-Serve generator fix in
-  [brace-mod-spaserve PR #8](https://github.com/brace-project/brace-mod-spaserve/pull/8).
-
-### Production: build once, serve via Apache (`DEV_MODE=0`)
-
-```text
-BUILD / DEPLOY (before switching DEV_MODE)
-  pnpm build
-      |
-      +-- generate API stubs from app.be/ PHP routes
-      |
-      +-- Vite compiles app.fe/src/main.ts + imports + SCSS
-              |
-              v
-          app.fe/dist/
-          +-- assets/app.js
-          +-- assets/app.css
-          +-- assets/*-[hash].js  (lazy-loaded chunks)
-              |
-              +---- deploy complete dist/ directory
-
-RUNTIME (DEV_MODE=0)
-  Browser --> Apache :80 --> www/index.php --> Brace
-                                      |
-                     +----------------+----------------+
-                     |                                 |
-                  /api/*                         SPA navigation
-                     |                                 |
-               PHP controllers                  ViteAutoHtml
-                                                 |     |
-                                                 v     v
-                                            SPA HTML   app.fe/dist/
-                                                       JS/CSS/chunks
-```
-
-- `DEV_MODE` selects the Brace application environment.
-  SPA-Serve uses that environment automatically: development injects
-  the Vite client; production references prebuilt `assets/app.js`
-  and `assets/app.css` plus any lazy-loaded chunks.
-- Switching `DEV_MODE` does **not** compile assets; build and deploy
-  `app.fe/dist/` before serving production traffic.
-- Production needs Apache/PHP and the built assets, **not** a running
-  Vite or Node server. Missing assets return 404; SPA navigation
-  receives the HTML shell. `CONF_APP_BASE_PATH` is the URL mount
-  prefix and `CONF_API_BASE_URL` optionally overrides the API base.
+Brace serves the SPA; Vite provides the frontend development server and builds.
 
 ## Directory map
 
@@ -176,81 +52,36 @@ colocate page-only dialogs/elements under
 shared components go into top-level `dialogs/` or `elements/`.
 Folder names are lowercase plurals; component classes use PascalCase.
 
-## API demos
+## Quick start
+
+```bash
+composer install
+pnpm install
+pnpm dev
+```
+
+Open `http://localhost:4000/` with Apache/PHP available on port 80.
+Vite serves frontend source files and forwards application/API requests to Brace.
+For production, run `pnpm build` and serve `app.fe/dist/` through Apache
+with `DEV_MODE=0` (Vite is not needed at runtime).
+
+**Details:** [Development, Vite, SPA-Serve and production build](docs/DEVELOPMENT.md).
+
+## Examples
 
 | Example | Frontend | Backend |
 |---|---|---|
-| Greeting | `pages/HomePage/HomePage.ts` | `GreetingCtrl::get` → `Demo.Greeting` |
+| Greeting (GET) | `pages/HomePage/HomePage.ts` | `GreetingCtrl::get` → `Demo.Greeting` |
 | Calculation (POST) | `elements/CalculateDemoElement.ts` | `CalculateCtrl::post` → `Demo.Calculate` |
 | Calculation settings | `dialogs/SettingsDialog.ts` | `CalculateCtrl::post` → `Demo.Calculate` |
-| Untyped array POST | `dialogs/SettingsDialog.ts` | `AnyCtrl::post` → `Demo.Any` |
-| Form and modal | `pages/FormExamplePage/` | Client-side Prolit state and dialog |
+| Untyped array (POST) | `dialogs/SettingsDialog.ts` | `AnyCtrl::post` → `Demo.Any` |
+| Form and dialog | `pages/FormExamplePage/` | Client-side Prolit |
 
-The calculation Web Component calls the **generated** API client using
-`scopeResource` and a typed POST body; it shows pending, error and
-result states. The server deliberately pauses for 700 ms to demonstrate
-asynchronous loading, not computational cost.
+`CalculateCtrl` demonstrates typed `CalculateRequest` and
+`CalculateResponse` DTOs. `AnyCtrl` accepts and returns a plain PHP
+`array`; its element types are **not** part of the TypeScript API contract.
+For a specific request/response structure, create a DTO.
 
-The **Calculation settings** dialog sends a structured `CalculateRequest`
-(`count`, `multiplier`, `label`), and receives `CalculateResponse`.
-For example, count 5 and multiplier 2 yield `sumOfSquares = 110`.
-The separate `AnyCtrl` instead accepts a plain `array $body` and
-returns `array`. The dialog posts `["Ada", 7, true]` to
-`Demo.Any` and displays `[true, 7, "Ada"]` as untyped JSON.
-Neither the input elements nor the response elements are schema-checked
-by the generated TypeScript API contract.
-
-A **top-level string POST body** is not implemented: the current
-`brace/mod-body` middleware JSON-encodes decoded string bodies again,
-which would change their value. Fix that at the library boundary before
-adding this example; do not compensate in the consumer. Typed POST
-bodies also depend on [SPA-Serve PR #8](https://github.com/brace-project/brace-mod-spaserve/pull/8).
-
-### API type boundaries
-
-The PHP signatures `array $body`, `object $body`, `array` return
-types, and `object` return types do **not** describe a `string[]` or
-any other specific structure. A PHPDoc such as `@param string[]`
-does not by itself establish a guaranteed typed API contract.
-
-| PHP API type | Contract |
-|---|---|
-| `CalculateRequest` body | Generated `CalculateRequest` interface |
-| `CalculateResponse` return | Generated `CalculateResponse` interface |
-| Bare `array` input/return | Unspecified values and element types |
-| Bare `object` input/return | Unspecified object structure |
-| `array $body` / `array` return in `AnyCtrl` | Unspecified array elements, no DTO |
-
-**Requested generator policy:** emit TypeScript `any` for a bare PHP
-`array` or `object` body or return value: the shape is unknown and
-there is no type guarantee. The current SPA-Serve generator has **not**
-implemented this policy; its renderer currently produces `unknown`
-or `Array<unknown>` depending on the parsed schema. An `any` type
-relaxes compile-time checking; it does not mean every runtime return
-value, including `undefined`, is actually possible. The fallback
-needs a separate change in the SPA-Serve generator.
-
-Use dedicated PHP DTO classes for specifically typed request/response
-shapes. A direct `string[]` input or output cannot be inferred from a
-bare PHP `array`; `AnyCtrl` intentionally leaves elements untyped.
-`CalculateCtrl` illustrates the typed DTO alternative.
-
-## Build and API contract
-
-```bash
-pnpm typecheck
-pnpm build
-# Only if manual API regeneration is needed:
-vendor/bin/brace spa-api-build
-```
-
-- `TypeScriptApiGeneratorModule` generates the client from **named**
-  `#[BraceRoute]` endpoints and typed PHP DTOs.
-- Vite regenerates stubs on startup, build and changes to existing
-  `app.be/` files. For newly created/deleted PHP files, regenerate
-  manually when the watcher misses them.
-- `DEV_MODE=1`: Apache + Vite/HMR. `DEV_MODE=0`: Apache + built assets;
-  no Vite server or Node runtime in production.
-- The SPA shell is generated by `ViteAutoHtml`, not an `AppShell.ts`.
-  `CONF_APP_BASE_PATH` is the public mount prefix and
-  `CONF_API_BASE_URL` optionally overrides API base URL.
+The frontend imports the generated API client from
+`app.fe/src/generated-api.ts`. Do not edit this file manually:
+the backend routes and DTOs are its source of truth.
