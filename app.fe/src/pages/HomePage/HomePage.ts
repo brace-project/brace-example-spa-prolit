@@ -1,7 +1,7 @@
 import { ProlitElement, scopeDefine, scopeResource } from '@trunkjs/prolit';
 import { route } from '@trunkjs/router';
 import { customElement } from 'lit/decorators.js';
-import { API, type GreetingResponse } from '../generated-api';
+import { API, type GreetingResponse } from '../../generated-api';
 
 @route({ name: 'home', path: '/' })
 @customElement('example-home-page')
@@ -37,6 +37,7 @@ export class HomePage extends ProlitElement {
             </ul>
           </aside>
         </div>
+        <example-calculate-demo></example-calculate-demo>
       </section>
     `,
 

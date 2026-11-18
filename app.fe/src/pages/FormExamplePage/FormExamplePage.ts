@@ -108,7 +108,7 @@ export class FormExamplePage extends ProlitElement {
       },
       openDialog: async (): Promise<void> => {
         this.recordEvent('Prolit dialog opened');
-        const { FormExampleDialog } = await import('./FormExampleDialog');
+        const { FormExampleDialog } = await import('./dialogs/FormExampleDialog');
         const result = await FormExampleDialog.show({ value: this.scope.typedValue });
         if (!result.submitted) {
           this.recordEvent('Prolit dialog cancelled');
