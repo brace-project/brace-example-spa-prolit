@@ -15,4 +15,7 @@ final class CalculateResponse
 
     /** Server-side elapsed time in milliseconds, including the demo delay. */
     public int $processingMs;
+
+    /** Display label supplied by the caller. */
+    public string $label;
 }
