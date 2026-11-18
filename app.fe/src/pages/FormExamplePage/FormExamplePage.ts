@@ -1,6 +1,7 @@
 import { ProlitElement, scopeDefine } from '@trunkjs/prolit';
 import { route } from '@trunkjs/router';
 import { customElement } from 'lit/decorators.js';
+import type { NteDataTableElement, TableDefinition } from '@nextrap/nte-data-table';
 
 type TableRow = { id: number; value: string };
 
@@ -10,70 +11,87 @@ export class FormExamplePage extends ProlitElement {
   protected override scope = scopeDefine({
     // language=HTML
     $tpl: `
-      <section class="card form-example" style="padding:1.25rem" style-md="padding:2rem">
+      <main class="container p-4 d-grid gap-4">
         <nav><a href="/">← Back to start</a></nav>
-        <p class="eyebrow">Prolit form and event bindings</p>
-        <h1>Form example</h1>
+        <header>
+          <p class="mb-2">Prolit form + Nextstrap components</p>
+          <h1>Form and components example</h1>
+        </header>
 
-        <div class="form-grid">
-          <form @submit="$event.preventDefault()">
+        <div class="d-grid gap-3" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,18rem),1fr))">
+          <form class="p-3 d-grid gap-3" style="border:1px solid var(--nt-border,#dbe1ec)" @submit="$event.preventDefault()">
             <h2>On change</h2>
-            <label>
-              Value
-              <input .value="changeValue" @change="$fn.changeValue($event.currentTarget.value)">
-            </label>
-            <p class="result">Compared text: <strong>{{ changeValue }}</strong></p>
-            <small>The text changes after the field emits <code>change</code>.</small>
+            <nte-input class="default" type="text" label="Change value" .value="changeValue"
+              @change="$fn.changeValue($event.currentTarget.value)"></nte-input>
+            <p>Compared text: <strong>{{ changeValue }}</strong></p>
+            <small>Updates when the control emits <code>change</code>.</small>
           </form>
-
-          <form @submit="$event.preventDefault()">
+          <form class="p-3 d-grid gap-3" style="border:1px solid var(--nt-border,#dbe1ec)" @submit="$event.preventDefault()">
             <h2>On typed</h2>
-            <label>
-              Value
-              <input .value="typedValue" @input="$fn.typeValue($event.currentTarget.value)">
-            </label>
-            <p class="result">Compared text: <strong>{{ typedValue }}</strong></p>
-            <small>The text changes immediately for every <code>input</code> event.</small>
+            <nte-input class="default" type="text" label="Live value" .value="typedValue"
+              @input="$fn.typeValue($event.currentTarget.value)"></nte-input>
+            <p>Compared text: <strong>{{ typedValue }}</strong></p>
+            <small>Updates with every <code>input</code> event.</small>
           </form>
         </div>
 
-        <section aria-labelledby="table-heading">
-          <div class="section-heading">
+        <section class="d-grid gap-3" aria-labelledby="table-heading">
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
             <div>
-              <h2 id="table-heading">Maintained list</h2>
-              <p>Add rows with + and remove individual rows with −.</p>
+              <h2 id="table-heading">Maintained list: NTE Data Table</h2>
+              <p>Edit a value in the table, add a row or remove it.</p>
             </div>
-            <button type="button" aria-label="Add row" @click="$fn.addRow()">+</button>
+            <button class="btn btn-primary" type="button" @click="$fn.addRow()">Add row +</button>
           </div>
-          <table>
-            <thead><tr><th>Value</th><th>Action</th></tr></thead>
-            <tbody>
-              <tr *for="row of rows; row.id">
-                <td>
-                  <input .value="row.value" aria-label="Row value" @input="$fn.updateRow(row.id, $event.currentTarget.value)">
-                </td>
-                <td><button type="button" aria-label="Remove row" @click="$fn.removeRow(row.id)">−</button></td>
-              </tr>
-            </tbody>
-          </table>
+          <nte-data-table class="style-default" height="16rem"
+            .definition="tableDefinition" .data="rows"></nte-data-table>
           <p *if="rows.length === 0" role="status">The list is empty.</p>
         </section>
 
-        <section>
+        <section class="d-grid gap-3">
           <h2>Prolit modal dialog</h2>
-          <p>The dialog is a separate <code>ProlitDialogElement</code> with typed input and result.</p>
-          <button type="button" @click="$fn.openDialog()">Open Prolit dialog</button>
-          <p *if="dialogResult" class="result">Dialog result: <strong>{{ dialogResult }}</strong></p>
+          <p>The dialog uses <code>nte-input</code> and returns a typed result.</p>
+          <div>
+            <button class="btn btn-primary" type="button" @click="$fn.openDialog()">Open dialog</button>
+          </div>
+          <p *if="dialogResult" class="p-3" style="background:var(--nt-surface,transparent)">
+            Dialog result: <strong>{{ dialogResult }}</strong>
+          </p>
+        </section>
+
+        <section class="d-grid gap-3">
+          <h2>NTE Stepper: live output</h2>
+          <p>Click a step to inspect current application state.</p>
+          <nte-stepper mode="horizontal" @nte-stepper-change="$fn.stepChanged($event.detail.index)">
+            <nte-step>
+              <strong slot="title">Input</strong>
+              <span slot="info">Value: {{ typedValue }}</span>
+            </nte-step>
+            <nte-step>
+              <strong slot="title">Table</strong>
+              <span slot="info">{{ rows.length }} rows</span>
+            </nte-step>
+            <nte-step>
+              <strong slot="title">Events</strong>
+              <span slot="info">{{ eventCount }} events</span>
+            </nte-step>
+          </nte-stepper>
+          <output class="p-3" style="background:var(--nt-surface,transparent)">
+            Step {{ activeStep + 1 }} of 3:
+            <span *if="activeStep === 0">Input: {{ typedValue }}</span>
+            <span *if="activeStep === 1">Table contains {{ rows.length }} rows.</span>
+            <span *if="activeStep === 2">{{ eventCount }} events triggered.</span>
+          </output>
         </section>
 
         <section aria-labelledby="events-heading">
           <h2 id="events-heading">Triggered events</h2>
           <p><strong>{{ eventCount }}</strong> events triggered</p>
-          <ol class="event-log">
+          <ol class="p-3" style="max-height:12rem;overflow:auto">
             <li *for="entry of eventLog; entry.id">{{ entry.text }}</li>
           </ol>
         </section>
-      </section>
+      </main>
     `,
 
     changeValue: 'Initial change value',
@@ -81,9 +99,44 @@ export class FormExamplePage extends ProlitElement {
     rows: [{ id: 1, value: 'First row' }] as TableRow[],
     nextRowId: 2,
     dialogResult: '',
+    activeStep: 0,
     eventCount: 0,
     eventLog: [] as Array<{ id: number; text: string }>,
+    tableDefinition: {
+      id: 'example-rows',
+      rowId: 'id',
+      columns: [
+        { id: 'id', header: 'ID', field: 'id', defaultWidth: 80 },
+        {
+          id: 'value', header: 'Value', field: 'value', defaultWidth: 300,
+          render: (_: unknown, row: TableRow) => {
+            const input = document.createElement('nte-input');
+            input.className = 'default';
+            input.type = 'text';
+            input.label = 'Row ' + row.id;
+            input.value = row.value;
+            input.addEventListener('input', () =>
+              this.scope.$fn.updateRow(row.id, String(input.value ?? '')));
+            return input;
+          },
+        },
+        {
+          id: 'action', header: 'Action', defaultWidth: 120, sortable: false,
+          render: (_: unknown, row: TableRow) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'btn btn-outline-danger btn-sm';
+            button.textContent = 'Remove';
+            button.addEventListener('click', () => this.scope.$fn.removeRow(row.id));
+            return button;
+          },
+        },
+      ],
+    } as TableDefinition<TableRow>,
     $fn: {
+      stepChanged: (index: number): void => {
+        this.scope.activeStep = index;
+      },
       changeValue: (value: string): void => {
         this.scope.changeValue = value;
         this.recordEvent(`change: ${value}`);
@@ -99,11 +152,11 @@ export class FormExamplePage extends ProlitElement {
         this.recordEvent(`row added: ${row.id}`);
       },
       updateRow: (id: number, value: string): void => {
-        this.scope.rows = this.scope.rows.map((row) => row.id === id ? { ...row, value } : row);
+        this.scope.rows = this.scope.rows.map(row => row.id === id ? { ...row, value } : row);
         this.recordEvent(`row changed: ${id}`);
       },
       removeRow: (id: number): void => {
-        this.scope.rows = this.scope.rows.filter((row) => row.id !== id);
+        this.scope.rows = this.scope.rows.filter(row => row.id !== id);
         this.recordEvent(`row removed: ${id}`);
       },
       openDialog: async (): Promise<void> => {

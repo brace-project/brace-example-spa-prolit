@@ -9,37 +9,48 @@ export class HomePage extends ProlitElement {
   protected override scope = scopeDefine({
     // language=HTML
     $tpl: `
-      <section class="card" style="padding:1.25rem" style-md="padding:2rem">
-        <div style="display:block" style-md="display:grid;grid-template-columns:2fr 1fr;gap:2rem">
-          <div>
-            <p class="eyebrow">Brace API + Prolit scope</p>
-            <h1>SPA example application</h1>
-            <p>
-              This page is a routed ProlitElement. Its backend response is loaded through
-              the TypeScript client generated from the Brace controller.
-            </p>
-            <p><a href="/form-example">Open the form, events, table and popup example →</a></p>
-            <button type="button" @click="$fn.openSettings()">Open calculation settings (POST)</button>
-            <button @click="greeting.reload()" ?disabled="greeting.pending">Reload backend greeting</button>
-            <p *if="greeting.pending" role="status">Loading from Brace…</p>
-            <p *if="greeting.error" role="alert">{{ greeting.error.message }}</p>
-            <p *if="greeting.data" class="result">
-              {{ greeting.data.message }} · backend: {{ greeting.data.backend }}
-            </p>
-          </div>
-          <aside class="facts" style="margin-top:1.5rem" style-md="margin-top:0">
-            <strong>Included in this base</strong>
-            <ul>
-              <li>Brace SPA serving</li>
-              <li>automatic API stub generation</li>
-              <li>TrunkJS Router decorators</li>
-              <li>ProlitElement light DOM</li>
-              <li>TrunkJS Responsive attributes</li>
-            </ul>
-          </aside>
+      <main class="container p-4">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+          <strong>Brace + Prolit + Nextstrap</strong>
+          <label class="switch">
+            <input class="switch-input" type="checkbox" @change="$fn.setDarkMode($event.currentTarget.checked)">
+            <span class="switch-control"></span>
+            <span class="switch-label">Dark mode</span>
+          </label>
         </div>
-        <example-calculate-demo></example-calculate-demo>
-      </section>
+
+        <section class="p-4" style="border:1px solid var(--nt-border, #dbe1ec);border-radius:var(--nt-border-radius,0.75rem)">
+          <div class="d-grid gap-4" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,18rem),1fr))">
+            <div>
+              <p class="mb-2">Brace API + Prolit scope</p>
+              <h1>SPA example application</h1>
+              <p>This routed ProlitElement loads the Brace API via generated TypeScript stubs.</p>
+              <p><a href="/form-example">Explore NTE Input, Data Table and Stepper →</a></p>
+              <div class="d-flex flex-wrap gap-2 mb-3">
+                <button class="btn btn-primary" type="button" @click="$fn.openSettings()">Calculation settings</button>
+                <button class="btn btn-outline-secondary" type="button" @click="greeting.reload()" ?disabled="greeting.pending">
+                  Reload greeting
+                </button>
+              </div>
+              <p *if="greeting.pending" role="status">Loading from Brace…</p>
+              <p *if="greeting.error" role="alert">{{ greeting.error.message }}</p>
+              <p *if="greeting.data" class="p-3" style="background:var(--nt-surface,transparent)">
+                {{ greeting.data.message }} · backend: {{ greeting.data.backend }}
+              </p>
+            </div>
+            <aside class="p-3" style="background:var(--nt-surface,transparent);border-radius:var(--nt-border-radius,0.75rem)">
+              <strong>What's included</strong>
+              <ul class="list">
+                <li>Brace SPA serving and generated API client</li>
+                <li>TrunkJS Router and Prolit state</li>
+                <li>Nextstrap Style Base, Buttons, Elements, Switch and Utils</li>
+                <li>NTE Input, NTE Data Table and NTE Stepper</li>
+              </ul>
+            </aside>
+          </div>
+          <example-calculate-demo></example-calculate-demo>
+        </section>
+      </main>
     `,
 
     greeting: scopeResource<GreetingResponse, []>({
@@ -48,6 +59,9 @@ export class HomePage extends ProlitElement {
       errorMessage: 'Greeting could not be loaded.',
     }),
     $fn: {
+      setDarkMode: (enabled: boolean): void => {
+        document.documentElement.setAttribute('data-nt-scheme', enabled ? 'dark' : 'light');
+      },
       openSettings: async (): Promise<void> => {
         const { SettingsDialog } = await import('../../dialogs/SettingsDialog');
         await SettingsDialog.show({ count: 5 });

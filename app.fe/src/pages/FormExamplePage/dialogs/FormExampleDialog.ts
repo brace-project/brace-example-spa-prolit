@@ -6,19 +6,16 @@ export class FormExampleDialog extends ProlitDialogElement<{ value: string }, st
   protected override scope = scopeDefine({
     // language=HTML
     $tpl: `
-      <div class="form-dialog-content">
+      <div class="d-grid gap-3">
         <p>This modal is rendered by <code>ProlitDialogElement</code>.</p>
-        <label>
-          Dialog value
-          <input .value="value" @input="value = $event.currentTarget.value">
-        </label>
-        <div class="dialog-actions">
-          <button type="button" @click="$fn.submit()" ?disabled="!value.trim()">Apply</button>
-          <button type="button" @click="$fn.cancel()">Cancel</button>
+        <nte-input class="default" type="text" label="Dialog value" .value="value"
+          @input="value = $event.currentTarget.value"></nte-input>
+        <div class="d-flex gap-2 justify-content-end">
+          <button class="btn btn-primary" type="button" @click="$fn.submit()" ?disabled="!value.trim()">Apply</button>
+          <button class="btn btn-outline-secondary" type="button" @click="$fn.cancel()">Cancel</button>
         </div>
       </div>
     `,
-
     value: '',
     $fn: {
       submit: (): void => this.submit(this.scope.value.trim()),
