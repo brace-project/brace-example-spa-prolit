@@ -28,6 +28,10 @@ export default defineConfig({
     }),
   ],
   base: '/',
+  // CSS-Source-Maps führen globale Entwicklungsstyles auf ihre SCSS-Quelldateien zurück.
+  css: {
+    devSourcemap: true,
+  },
   // Development only: Vite forwards application requests unchanged to Brace.
   // Prefix evaluation is handled exclusively by Brace and does not happen in this proxy.
   server: {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-define('DEV_MODE', (bool) '0');
+define('DEV_MODE', (bool) '1');
 
 // Public mount path of the browser application. Configure it only here; it is
 // assigned to BraceApp::$appBasePath and inherited by routing, SPA delivery and links.

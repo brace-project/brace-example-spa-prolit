@@ -2,6 +2,7 @@ import { ProlitElement, scopeDefine, scopeResource } from '@trunkjs/prolit';
 import { route } from '@trunkjs/router';
 import { customElement } from 'lit/decorators.js';
 import { API, type GreetingResponse } from '../../generated-api';
+import { requestFeedback } from '../../requestFeedback';
 
 @route({ name: 'home', path: '/' })
 @customElement('example-home-page')
@@ -25,14 +26,13 @@ export class HomePage extends ProlitElement {
               <p class="mb-2">Brace API + Prolit scope</p>
               <h1>SPA example application</h1>
               <p>This routed ProlitElement loads the Brace API via generated TypeScript stubs.</p>
-              <p><a href="/form-example">Explore NTE Input, Data Table and Stepper →</a></p>
+              <p><a href="/form-example">Explore NTE Input and Data Table →</a></p>
               <div class="d-flex flex-wrap gap-2 mb-3">
                 <button class="btn btn-primary" type="button" @click="$fn.openSettings()">Calculation settings</button>
                 <button class="btn btn-outline-secondary" type="button" @click="greeting.reload()" ?disabled="greeting.pending">
                   Reload greeting
                 </button>
               </div>
-              <p *if="greeting.pending" role="status">Loading from Brace…</p>
               <p *if="greeting.error" role="alert">{{ greeting.error.message }}</p>
               <p *if="greeting.data" class="p-3" style="background:var(--nt-surface,transparent)">
                 {{ greeting.data.message }} · backend: {{ greeting.data.backend }}
@@ -44,7 +44,7 @@ export class HomePage extends ProlitElement {
                 <li>Brace SPA serving and generated API client</li>
                 <li>TrunkJS Router and Prolit state</li>
                 <li>Nextstrap Style Base, Buttons, Elements, Switch and Utils</li>
-                <li>NTE Input, NTE Data Table and NTE Stepper</li>
+                <li>NTE Input, NTE Data Table and NTE Feedback</li>
               </ul>
             </aside>
           </div>
@@ -54,7 +54,7 @@ export class HomePage extends ProlitElement {
     `,
 
     greeting: scopeResource<GreetingResponse, []>({
-      load: ({ signal }) => API.Demo.Greeting.request({ options: { signal } }),
+      load: ({ signal }) => requestFeedback(() => API.Demo.Greeting.request({ options: { signal } })),
       retainData: false,
       errorMessage: 'Greeting could not be loaded.',
     }),

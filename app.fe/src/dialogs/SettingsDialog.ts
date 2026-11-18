@@ -1,6 +1,7 @@
 import { ProlitDialogElement, scopeDefine } from '@trunkjs/prolit';
 import { customElement } from 'lit/decorators.js';
 import { API, type CalculateRequest, type CalculateResponse } from '../generated-api';
+import { requestFeedback } from '../requestFeedback';
 
 @customElement('example-settings-dialog')
 export class SettingsDialog extends ProlitDialogElement<{ count: number }, CalculateResponse | null> {
@@ -24,7 +25,6 @@ export class SettingsDialog extends ProlitDialogElement<{ count: number }, Calcu
           Send array via POST
         </button>
         <pre *if="anyResult" class="p-3">{{ anyResult }}</pre>
-        <p *if="pending" role="status">Sending request…</p>
         <p *if="error" role="alert">{{ error }}</p>
         <div class="d-flex justify-content-end gap-2">
           <button class="btn btn-outline-secondary" type="button" @click="$fn.close()" ?disabled="pending">Close</button>
@@ -56,7 +56,7 @@ export class SettingsDialog extends ProlitDialogElement<{ count: number }, Calcu
         this.scope.error = '';
 
         try {
-          this.scope.result = await API.Demo.Calculate.request({ body });
+          this.scope.result = await requestFeedback(() => API.Demo.Calculate.request({ body }));
         } catch (error) {
           this.scope.error = error instanceof Error ? error.message : 'Calculation failed.';
         } finally {
@@ -83,7 +83,7 @@ export class SettingsDialog extends ProlitDialogElement<{ count: number }, Calcu
         this.scope.anyResult = '';
 
         try {
-          const result = await API.Demo.Any.request({ body });
+          const result = await requestFeedback(() => API.Demo.Any.request({ body }));
           this.scope.anyResult = JSON.stringify(result, null, 2);
         } catch (error) {
           this.scope.error = error instanceof Error ? error.message : 'Array request failed.';

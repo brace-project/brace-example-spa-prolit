@@ -9,18 +9,17 @@
     "typecheck": "pnpm run api:build && tsc --noEmit"
   },
   "dependencies": {
-    "@nextrap/nt-core": "^2.0.2",
     "@nextrap/nte-data-table": "^1.0.0",
     "@nextrap/nte-input": "^2.0.2",
     "@nextrap/nte-progress": "^2.0.0",
-    "@nextrap/nte-stepper": "^2.0.0",
+    "@nextrap/nte-feedback": "^2.0.0",
     "@nextrap/nte-table": "^1.0.0",
     "@nextrap/style-base": "^2.0.1",
     "@nextrap/style-button": "^2.0.2",
     "@nextrap/style-elements": "^2.0.4",
     "@nextrap/style-reset": "^2.0.2",
     "@nextrap/style-switch": "^0.1.0",
-    "@nextrap/style-typography": "^2.0.4",
+    "@nextrap/style-typography": "^2.1.0",
     "@nextrap/style-utils": "^2.0.0",
     "@trunkjs/api-stub": "*",
     "@trunkjs/browser-utils": "*",
@@ -34,7 +33,8 @@
     "lit-html": "^3.3.1"
   },
   "workspaces": [
-    "workspaces/trunkjs-monorepo/packages/*"
+    "workspaces/trunkjs-monorepo/packages/*",
+    "workspaces/nextrap-monorepo/*/*"
   ],
   "devDependencies": {
     "@types/node": "^22.15.29",

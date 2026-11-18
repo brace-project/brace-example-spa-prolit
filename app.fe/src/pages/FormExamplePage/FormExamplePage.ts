@@ -59,31 +59,6 @@ export class FormExamplePage extends ProlitElement {
           </p>
         </section>
 
-        <section class="d-grid gap-3">
-          <h2>NTE Stepper: live output</h2>
-          <p>Click a step to inspect current application state.</p>
-          <nte-stepper mode="horizontal" @nte-stepper-change="$fn.stepChanged($event.detail.index)">
-            <nte-step>
-              <strong slot="title">Input</strong>
-              <span slot="info">Value: {{ typedValue }}</span>
-            </nte-step>
-            <nte-step>
-              <strong slot="title">Table</strong>
-              <span slot="info">{{ rows.length }} rows</span>
-            </nte-step>
-            <nte-step>
-              <strong slot="title">Events</strong>
-              <span slot="info">{{ eventCount }} events</span>
-            </nte-step>
-          </nte-stepper>
-          <output class="p-3" style="background:var(--nt-surface,transparent)">
-            Step {{ activeStep + 1 }} of 3:
-            <span *if="activeStep === 0">Input: {{ typedValue }}</span>
-            <span *if="activeStep === 1">Table contains {{ rows.length }} rows.</span>
-            <span *if="activeStep === 2">{{ eventCount }} events triggered.</span>
-          </output>
-        </section>
-
         <section aria-labelledby="events-heading">
           <h2 id="events-heading">Triggered events</h2>
           <p><strong>{{ eventCount }}</strong> events triggered</p>
@@ -99,7 +74,6 @@ export class FormExamplePage extends ProlitElement {
     rows: [{ id: 1, value: 'First row' }] as TableRow[],
     nextRowId: 2,
     dialogResult: '',
-    activeStep: 0,
     eventCount: 0,
     eventLog: [] as Array<{ id: number; text: string }>,
     tableDefinition: {
@@ -134,9 +108,6 @@ export class FormExamplePage extends ProlitElement {
       ],
     } as TableDefinition<TableRow>,
     $fn: {
-      stepChanged: (index: number): void => {
-        this.scope.activeStep = index;
-      },
       changeValue: (value: string): void => {
         this.scope.changeValue = value;
         this.recordEvent(`change: ${value}`);

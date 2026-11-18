@@ -1,6 +1,7 @@
 import { ProlitElement, scopeDefine, scopeResource } from '@trunkjs/prolit';
 import { customElement } from 'lit/decorators.js';
 import { API, type CalculateResponse } from '../generated-api';
+import { requestFeedback } from '../requestFeedback';
 
 @customElement('example-calculate-demo')
 export class CalculateDemoElement extends ProlitElement {
@@ -13,7 +14,6 @@ export class CalculateDemoElement extends ProlitElement {
         <button class="btn btn-primary" type="button" @click="calculation.reload()" ?disabled="calculation.pending">
           Calculate again (POST)
         </button>
-        <p *if="calculation.pending" role="status">Calculating on the server…</p>
         <p *if="calculation.error" role="alert">{{ calculation.error.message }}</p>
         <p *if="calculation.data" class="p-3">
           {{ calculation.data.label }}: {{ calculation.data.count }} squares = <strong>{{ calculation.data.sumOfSquares }}</strong>
@@ -23,7 +23,7 @@ export class CalculateDemoElement extends ProlitElement {
     `,
 
     calculation: scopeResource<CalculateResponse, []>({
-      load: ({ signal }) => API.Demo.Calculate.request({ body: { count: 1000, multiplier: 1, label: 'Demo' }, options: { signal } }),
+      load: ({ signal }) => requestFeedback(() => API.Demo.Calculate.request({ body: { count: 1000, multiplier: 1, label: 'Demo' }, options: { signal } })),
       retainData: false,
       errorMessage: 'Calculation failed.',
     }),

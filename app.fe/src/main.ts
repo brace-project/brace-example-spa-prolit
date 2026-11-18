@@ -3,7 +3,7 @@ import { configureProlitDialogs, createSimpleDialogRenderer } from '@trunkjs/pro
 import { Router, setDefaultRouter } from '@trunkjs/router';
 import '@nextrap/nte-input';
 import '@nextrap/nte-data-table';
-import '@nextrap/nte-stepper';
+import '@nextrap/nte-feedback';
 import './app.scss';
 import { FormExamplePage } from './pages/FormExamplePage/FormExamplePage';
 import { HomePage } from './pages/HomePage/HomePage';

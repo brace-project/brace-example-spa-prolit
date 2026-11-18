@@ -21,7 +21,7 @@ AppLoader::extend(function (BraceApp $app): void {
         title: 'Brace + Prolit Example',
         css: ['assets/app.css'],
         javascript: ['assets/app.js'],
-        startHtml: '<tj-responsive><router-content></router-content></tj-responsive>',
+        startHtml: '<nte-feedback></nte-feedback><tj-responsive><router-content></router-content></tj-responsive>',
         devEntrypoint: '/src/main.ts',
     );
 

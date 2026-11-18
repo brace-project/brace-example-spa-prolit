@@ -1,10 +1,10 @@
 // Nextstrap owns visual styles. Layout uses utilities and inline styles in components.
-@use '@nextrap/style-reset/default';
-@use '@nextrap/style-base/default';
-@use '@nextrap/style-typography/default';
-@use '@nextrap/style-button/default';
-@use '@nextrap/style-elements/default';
-@use '@nextrap/style-switch/default';
-@use '@nextrap/style-utils/default';
-@use '@nextrap/nte-input/default-style';
-@use '@nextrap/nte-data-table/default';
+@use '@nextrap/style-reset';
+@use '@nextrap/style-base/default' as base;
+@use '@nextrap/style-typography/default' as typography;
+@use '@nextrap/style-button/default' as button;
+@use '@nextrap/style-elements/default' as elements;
+@use '@nextrap/style-switch/default' as switch;
+@use '@nextrap/style-utils/default' as utils;
+@use '@nextrap/nte-input/index' as input;
+@use '@nextrap/nte-data-table';

@@ -75,7 +75,7 @@ with `DEV_MODE=0` (Vite is not needed at runtime).
 | Calculation (POST) | `elements/CalculateDemoElement.ts` | `CalculateCtrl::post` → `Demo.Calculate` |
 | Calculation settings | `dialogs/SettingsDialog.ts` | `CalculateCtrl::post` → `Demo.Calculate` |
 | Untyped array (POST) | `dialogs/SettingsDialog.ts` | `AnyCtrl::post` → `Demo.Any` |
-| Form, NTE Data Table and NTE Stepper | `pages/FormExamplePage/` | Client-side Prolit |
+| Form and NTE Data Table | `pages/FormExamplePage/` | Client-side Prolit |
 
 `CalculateCtrl` demonstrates typed `CalculateRequest` and
 `CalculateResponse` DTOs. `AnyCtrl` accepts and returns a plain PHP
@@ -89,11 +89,12 @@ the backend routes and DTOs are its source of truth.
 ## Nextstrap components
 
 The frontend uses **Nextstrap Style Base**, Buttons, Elements, Switch,
-Utils and the NTE Input, NTE Data Table and NTE Stepper Web Components.
+Utils and the NTE Input, NTE Data Table and NTE Feedback Web Components.
 `app.fe/src/app.scss` imports their default styles without custom
 application-wide selectors. Layout is expressed via Nextstrap utility
 classes and occasional inline styles in the templates.
 
 The form example demonstrates live `nte-input` bindings, editing
-`nte-data-table` rows and a clickable `nte-stepper` showing current
-input, table and event output. The home page includes a theme switch.
+`nte-data-table` rows and event output. API requests use the central
+`nte-feedback` loading indicator, which stays open until all concurrent
+requests finish. The home page includes a theme switch.
