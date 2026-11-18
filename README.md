@@ -144,11 +144,12 @@ RUNTIME (DEV_MODE=0)
 │       └── Ctrl/                      # HTTP controllers
 │           ├── GreetingCtrl.php       # GET greeting API
 │           ├── CalculateCtrl.php      # Typed POST calculation API
-│           ├── TextCtrl.php           # string[] POST API
+│           ├── TextCtrl.php           # Typed text POST API
 │           └── Dto/                   # Controller request/response DTOs
 │               ├── GreetingResponse.php
 │               ├── CalculateResponse.php
 │               ├── CalculateInput.php
+│               ├── TextInput.php
 │               └── TextResponse.php
 ├── app.fe/                            # Prolit frontend
 │   ├── src/
@@ -165,7 +166,7 @@ RUNTIME (DEV_MODE=0)
 │   │   ├── dialogs/                   # Shared dialogs
 │   │   │   └── SettingsDialog.ts      # Typed POST example
 │   │   └── elements/                  # Reusable Web Components
-│   │       └── CalculateDemoElement.ts # Async GET example
+│   │       └── CalculateDemoElement.ts # Async POST example
 │   └── dist/                           # Production build output
 └── www/
     └── index.php                      # Apache front controller
@@ -184,7 +185,7 @@ Folder names are lowercase plurals; component classes use PascalCase.
 | Greeting | `pages/HomePage/HomePage.ts` | `GreetingCtrl::get` → `Demo.Greeting` |
 | Calculation (POST) | `elements/CalculateDemoElement.ts` | `CalculateCtrl::post` → `Demo.Calculate` |
 | Calculation settings | `dialogs/SettingsDialog.ts` | `CalculateCtrl::post` → `Demo.Calculate` |
-| String array POST | `dialogs/SettingsDialog.ts` | `TextCtrl::post` → `Demo.JoinStrings` |
+| Text DTO POST | `dialogs/SettingsDialog.ts` | `TextCtrl::post` → `Demo.JoinStrings` |
 | Form and modal | `pages/FormExamplePage/` | Client-side Prolit state and dialog |
 
 The calculation Web Component calls the **generated** API client using
@@ -193,17 +194,45 @@ result states. The server deliberately pauses for 700 ms to demonstrate
 asynchronous loading, not computational cost.
 
 The **Calculation settings** dialog sends a structured `CalculateInput`
-(`count`, `multiplier`, `label`), and receives the same
-`CalculateResponse` type. For example, count 5 and multiplier 2 yield
-`sumOfSquares = 110`. The dialog also demonstrates a direct JSON
-`string[]` POST to `Demo.JoinStrings` (e.g. `["Ada", "Lin"]`)
-and displays `"Ada, Lin"` from the response.
+(`count`, `multiplier`, `label`), and receives `CalculateResponse`.
+For example, count 5 and multiplier 2 yield `sumOfSquares = 110`.
+A second endpoint sends a dedicated `TextInput` DTO with string fields
+`first` and `second` and returns `TextResponse` (`"Ada, Lin"`).
 
 A **top-level string POST body** is not implemented: the current
 `brace/mod-body` middleware JSON-encodes decoded string bodies again,
 which would change their value. Fix that at the library boundary before
 adding this example; do not compensate in the consumer. Typed POST
 bodies also depend on [SPA-Serve PR #8](https://github.com/brace-project/brace-mod-spaserve/pull/8).
+
+### API type boundaries
+
+The PHP signatures `array $body`, `object $body`, `array` return
+types, and `object` return types do **not** describe a `string[]` or
+any other specific structure. A PHPDoc such as `@param string[]`
+does not by itself establish a guaranteed typed API contract.
+
+| PHP API type | Contract |
+|---|---|
+| `CalculateInput` body | Generated `CalculateInput` interface |
+| `CalculateResponse` return | Generated `CalculateResponse` interface |
+| Bare `array` input/return | Unspecified values and element types |
+| Bare `object` input/return | Unspecified object structure |
+| `TextInput` body / `TextResponse` return | Explicitly typed DTO fields |
+
+**Requested generator policy:** emit TypeScript `any` for a bare PHP
+`array` or `object` body or return value: the shape is unknown and
+there is no type guarantee. The current SPA-Serve generator has **not**
+implemented this policy; its renderer currently produces `unknown`
+or `Array<unknown>` depending on the parsed schema. An `any` type
+relaxes compile-time checking; it does not mean every runtime return
+value, including `undefined`, is actually possible. The fallback
+needs a separate change in the SPA-Serve generator.
+
+Use dedicated PHP DTO classes for specifically typed request/response
+shapes. A direct `string[]` input or output cannot be inferred
+from a bare PHP `array`; the text example uses `TextInput` and
+`TextResponse` instead.
 
 ## Build and API contract
 

@@ -18,6 +18,10 @@
   only for cross-page components. No `features/` system yet.
 - Read `README.md` for the directory map and example flows.
 
+- Bare PHP `array`/`object` body or response types do not establish
+  typed element/field shapes; prefer explicit input/output DTOs.
+  Never describe a plain PHP `array` as a typed `string[]` API.
+
 ## Environment and build contracts
 
 - `bootstrap.php` loads Docker `config.php` and configures `app.be/`.

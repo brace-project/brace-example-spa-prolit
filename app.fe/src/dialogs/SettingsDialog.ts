@@ -1,6 +1,6 @@
 import { ProlitDialogElement, scopeDefine } from '@trunkjs/prolit';
 import { customElement } from 'lit/decorators.js';
-import { API, type CalculateInput, type CalculateResponse, type TextResponse } from '../generated-api';
+import { API, type CalculateInput, type CalculateResponse, type TextInput, type TextResponse } from '../generated-api';
 
 @customElement('example-settings-dialog')
 export class SettingsDialog extends ProlitDialogElement<{ count: number }, CalculateResponse | null> {
@@ -8,7 +8,7 @@ export class SettingsDialog extends ProlitDialogElement<{ count: number }, Calcu
     // language=HTML
     $tpl: `
       <div class="settings-dialog-content">
-        <p>POST a typed configuration or a plain JSON string array.</p>
+        <p>POST structured configuration data or a dedicated text input DTO.</p>
         <label>Number of squares (1–1000)
           <input type="number" min="1" max="1000" step="1"
                  .value="count" @input="count = $event.currentTarget.value">
@@ -28,11 +28,14 @@ export class SettingsDialog extends ProlitDialogElement<{ count: number }, Calcu
           {{ result.label }}: {{ result.count }} squares = <strong>{{ result.sumOfSquares }}</strong>
           ({{ result.processingMs }} ms server time)
         </p>
-        <label>Strings (one per line, max 20)
-          <textarea rows="3" .value="strings" @input="strings = $event.currentTarget.value"></textarea>
+        <label>First text
+          <input type="text" .value="firstText" @input="firstText = $event.currentTarget.value">
+        </label>
+        <label>Second text
+          <input type="text" .value="secondText" @input="secondText = $event.currentTarget.value">
         </label>
         <button type="button" @click="$fn.joinStrings()" ?disabled="pending">
-          Send string[] via POST
+          Send TextInput via POST
         </button>
         <p *if="textResult" class="result">
           {{ textResult.count }} strings: {{ textResult.joined }}
@@ -48,7 +51,8 @@ export class SettingsDialog extends ProlitDialogElement<{ count: number }, Calcu
     count: '5',
     multiplier: '2',
     label: 'Example',
-    strings: 'Ada\nLin',
+    firstText: 'Ada',
+    secondText: 'Lin',
     pending: false,
     error: '',
     result: null as CalculateResponse | null,
@@ -78,11 +82,10 @@ export class SettingsDialog extends ProlitDialogElement<{ count: number }, Calcu
       },
       joinStrings: async (): Promise<void> => {
         if (this.scope.pending) return;
-        const body = this.scope.strings.split(/\r?\n/).map(value => value.trim()).filter(Boolean);
-        if (body.length > 20) {
-          this.scope.error = 'At most 20 strings are allowed.';
-          return;
-        }
+        const body: TextInput = {
+          first: this.scope.firstText,
+          second: this.scope.secondText,
+        };
         this.scope.pending = true;
         this.scope.error = '';
 

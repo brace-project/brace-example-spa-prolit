@@ -4,37 +4,30 @@ declare(strict_types=1);
 
 namespace App\Ctrl;
 
+use App\Ctrl\Dto\TextInput;
 use App\Ctrl\Dto\TextResponse;
 use Brace\Router\Attributes\BraceRoute;
 
 final class TextCtrl
 {
     /**
-     * Joins a plain JSON array of strings with commas.
+     * Joins two strings supplied through a dedicated input DTO.
      *
-     * Demonstrates a body without a dedicated input DTO. No data is stored.
+     * Bare PHP array/object types do not convey a precise generated
+     * TypeScript contract. This endpoint does not persist data.
      *
-     * @param string[] $body List of texts, e.g. ["Ada", "Lin"].
-     * @return TextResponse Count and joined string.
-     * @throws \InvalidArgumentException If there are too many items or non-string entries.
-     * @example $result = (new TextCtrl())->post(['Ada', 'Lin']);
+     * @param TextInput $body Two named input strings.
+     * @return TextResponse Number of strings and joined text.
+     * @example $input = new TextInput(); $input->first = 'Ada'; $input->second = 'Lin'; $result = (new TextCtrl())->post($input);
+     * @see TextInput
      * @see TextResponse
      */
     #[BraceRoute('POST@/texts/join', name: 'Demo.JoinStrings')]
-    public function post(array $body): TextResponse
+    public function post(TextInput $body): TextResponse
     {
-        if (count($body) > 20) {
-            throw new \InvalidArgumentException('At most 20 strings are allowed');
-        }
-        foreach ($body as $value) {
-            if (!is_string($value)) {
-                throw new \InvalidArgumentException('Every item must be a string');
-            }
-        }
-
         $response = new TextResponse();
-        $response->count = count($body);
-        $response->joined = implode(', ', $body);
+        $response->count = 2;
+        $response->joined = implode(', ', [$body->first, $body->second]);
 
         return $response;
     }
