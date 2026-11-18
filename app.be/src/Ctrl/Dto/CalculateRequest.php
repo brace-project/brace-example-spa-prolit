@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Ctrl\Dto;
 
 /** Structured POST configuration for the calculation example. */
-final class CalculateInput
+final class CalculateRequest
 {
     /** Number of terms to sum (1–1000). */
     public int $count;

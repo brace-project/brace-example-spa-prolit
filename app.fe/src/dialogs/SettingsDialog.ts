@@ -1,6 +1,6 @@
 import { ProlitDialogElement, scopeDefine } from '@trunkjs/prolit';
 import { customElement } from 'lit/decorators.js';
-import { API, type CalculateInput, type CalculateResponse } from '../generated-api';
+import { API, type CalculateRequest, type CalculateResponse } from '../generated-api';
 
 @customElement('example-settings-dialog')
 export class SettingsDialog extends ProlitDialogElement<{ count: number }, CalculateResponse | null> {
@@ -62,7 +62,7 @@ export class SettingsDialog extends ProlitDialogElement<{ count: number }, Calcu
           return;
         }
 
-        const body: CalculateInput = { count, multiplier, label: this.scope.label };
+        const body: CalculateRequest = { count, multiplier, label: this.scope.label };
         this.scope.pending = true;
         this.scope.error = '';
 

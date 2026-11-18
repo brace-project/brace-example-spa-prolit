@@ -148,7 +148,7 @@ RUNTIME (DEV_MODE=0)
 │           └── Dto/                   # Controller request/response DTOs
 │               ├── GreetingResponse.php
 │               ├── CalculateResponse.php
-│               └── CalculateInput.php
+│               └── CalculateRequest.php
 ├── app.fe/                            # Prolit frontend
 │   ├── src/
 │   │   ├── main.ts                    # Register elements and start router
@@ -191,7 +191,7 @@ The calculation Web Component calls the **generated** API client using
 result states. The server deliberately pauses for 700 ms to demonstrate
 asynchronous loading, not computational cost.
 
-The **Calculation settings** dialog sends a structured `CalculateInput`
+The **Calculation settings** dialog sends a structured `CalculateRequest`
 (`count`, `multiplier`, `label`), and receives `CalculateResponse`.
 For example, count 5 and multiplier 2 yield `sumOfSquares = 110`.
 The separate `AnyCtrl` instead accepts a plain `array $body` and
@@ -215,7 +215,7 @@ does not by itself establish a guaranteed typed API contract.
 
 | PHP API type | Contract |
 |---|---|
-| `CalculateInput` body | Generated `CalculateInput` interface |
+| `CalculateRequest` body | Generated `CalculateRequest` interface |
 | `CalculateResponse` return | Generated `CalculateResponse` interface |
 | Bare `array` input/return | Unspecified values and element types |
 | Bare `object` input/return | Unspecified object structure |
