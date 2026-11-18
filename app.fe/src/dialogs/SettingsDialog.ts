@@ -1,6 +1,6 @@
 import { ProlitDialogElement, scopeDefine } from '@trunkjs/prolit';
 import { customElement } from 'lit/decorators.js';
-import { API, type CalculateInput, type CalculateResponse, type TextInput, type TextResponse } from '../generated-api';
+import { API, type CalculateInput, type CalculateResponse } from '../generated-api';
 
 @customElement('example-settings-dialog')
 export class SettingsDialog extends ProlitDialogElement<{ count: number }, CalculateResponse | null> {
@@ -8,7 +8,7 @@ export class SettingsDialog extends ProlitDialogElement<{ count: number }, Calcu
     // language=HTML
     $tpl: `
       <div class="settings-dialog-content">
-        <p>POST structured configuration data or a dedicated text input DTO.</p>
+        <p>Compare a typed calculation POST with an untyped array POST.</p>
         <label>Number of squares (1–1000)
           <input type="number" min="1" max="1000" step="1"
                  .value="count" @input="count = $event.currentTarget.value">
@@ -28,18 +28,13 @@ export class SettingsDialog extends ProlitDialogElement<{ count: number }, Calcu
           {{ result.label }}: {{ result.count }} squares = <strong>{{ result.sumOfSquares }}</strong>
           ({{ result.processingMs }} ms server time)
         </p>
-        <label>First text
-          <input type="text" .value="firstText" @input="firstText = $event.currentTarget.value">
+        <label>Untyped JSON array
+          <textarea rows="3" .value="anyJson" @input="anyJson = $event.currentTarget.value"></textarea>
         </label>
-        <label>Second text
-          <input type="text" .value="secondText" @input="secondText = $event.currentTarget.value">
-        </label>
-        <button type="button" @click="$fn.joinStrings()" ?disabled="pending">
-          Send TextInput via POST
+        <button type="button" @click="$fn.sendAny()" ?disabled="pending">
+          Send array via POST
         </button>
-        <p *if="textResult" class="result">
-          {{ textResult.count }} strings: {{ textResult.joined }}
-        </p>
+        <pre *if="anyResult" class="result">{{ anyResult }}</pre>
         <p *if="pending" role="status">Sending request…</p>
         <p *if="error" role="alert">{{ error }}</p>
         <div class="dialog-actions">
@@ -51,12 +46,11 @@ export class SettingsDialog extends ProlitDialogElement<{ count: number }, Calcu
     count: '5',
     multiplier: '2',
     label: 'Example',
-    firstText: 'Ada',
-    secondText: 'Lin',
+    anyJson: '["Ada", 7, true]',
     pending: false,
     error: '',
     result: null as CalculateResponse | null,
-    textResult: null as TextResponse | null,
+    anyResult: '',
     $fn: {
       calculate: async (): Promise<void> => {
         const count = Number(this.scope.count);
@@ -80,19 +74,30 @@ export class SettingsDialog extends ProlitDialogElement<{ count: number }, Calcu
           this.scope.pending = false;
         }
       },
-      joinStrings: async (): Promise<void> => {
+      sendAny: async (): Promise<void> => {
         if (this.scope.pending) return;
-        const body: TextInput = {
-          first: this.scope.firstText,
-          second: this.scope.secondText,
-        };
+
+        let body: unknown;
+        try {
+          body = JSON.parse(this.scope.anyJson);
+        } catch {
+          this.scope.error = 'Enter valid JSON.';
+          return;
+        }
+        if (!Array.isArray(body)) {
+          this.scope.error = 'The request body must be a JSON array.';
+          return;
+        }
+
         this.scope.pending = true;
         this.scope.error = '';
+        this.scope.anyResult = '';
 
         try {
-          this.scope.textResult = await API.Demo.JoinStrings.request({ body });
+          const result = await API.Demo.Any.request({ body });
+          this.scope.anyResult = JSON.stringify(result, null, 2);
         } catch (error) {
-          this.scope.error = error instanceof Error ? error.message : 'Joining strings failed.';
+          this.scope.error = error instanceof Error ? error.message : 'Array request failed.';
         } finally {
           this.scope.pending = false;
         }
@@ -111,6 +116,6 @@ export class SettingsDialog extends ProlitDialogElement<{ count: number }, Calcu
     this.scope.count = String(input.count);
     this.scope.error = '';
     this.scope.result = null;
-    this.scope.textResult = null;
+    this.scope.anyResult = '';
   }
 }

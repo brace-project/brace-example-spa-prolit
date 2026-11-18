@@ -144,13 +144,11 @@ RUNTIME (DEV_MODE=0)
 │       └── Ctrl/                      # HTTP controllers
 │           ├── GreetingCtrl.php       # GET greeting API
 │           ├── CalculateCtrl.php      # Typed POST calculation API
-│           ├── TextCtrl.php           # Typed text POST API
+│           ├── AnyCtrl.php            # Untyped array POST API
 │           └── Dto/                   # Controller request/response DTOs
 │               ├── GreetingResponse.php
 │               ├── CalculateResponse.php
-│               ├── CalculateInput.php
-│               ├── TextInput.php
-│               └── TextResponse.php
+│               └── CalculateInput.php
 ├── app.fe/                            # Prolit frontend
 │   ├── src/
 │   │   ├── main.ts                    # Register elements and start router
@@ -185,7 +183,7 @@ Folder names are lowercase plurals; component classes use PascalCase.
 | Greeting | `pages/HomePage/HomePage.ts` | `GreetingCtrl::get` → `Demo.Greeting` |
 | Calculation (POST) | `elements/CalculateDemoElement.ts` | `CalculateCtrl::post` → `Demo.Calculate` |
 | Calculation settings | `dialogs/SettingsDialog.ts` | `CalculateCtrl::post` → `Demo.Calculate` |
-| Text DTO POST | `dialogs/SettingsDialog.ts` | `TextCtrl::post` → `Demo.JoinStrings` |
+| Untyped array POST | `dialogs/SettingsDialog.ts` | `AnyCtrl::post` → `Demo.Any` |
 | Form and modal | `pages/FormExamplePage/` | Client-side Prolit state and dialog |
 
 The calculation Web Component calls the **generated** API client using
@@ -196,8 +194,11 @@ asynchronous loading, not computational cost.
 The **Calculation settings** dialog sends a structured `CalculateInput`
 (`count`, `multiplier`, `label`), and receives `CalculateResponse`.
 For example, count 5 and multiplier 2 yield `sumOfSquares = 110`.
-A second endpoint sends a dedicated `TextInput` DTO with string fields
-`first` and `second` and returns `TextResponse` (`"Ada, Lin"`).
+The separate `AnyCtrl` instead accepts a plain `array $body` and
+returns `array`. The dialog posts `["Ada", 7, true]` to
+`Demo.Any` and displays `[true, 7, "Ada"]` as untyped JSON.
+Neither the input elements nor the response elements are schema-checked
+by the generated TypeScript API contract.
 
 A **top-level string POST body** is not implemented: the current
 `brace/mod-body` middleware JSON-encodes decoded string bodies again,
@@ -218,7 +219,7 @@ does not by itself establish a guaranteed typed API contract.
 | `CalculateResponse` return | Generated `CalculateResponse` interface |
 | Bare `array` input/return | Unspecified values and element types |
 | Bare `object` input/return | Unspecified object structure |
-| `TextInput` body / `TextResponse` return | Explicitly typed DTO fields |
+| `array $body` / `array` return in `AnyCtrl` | Unspecified array elements, no DTO |
 
 **Requested generator policy:** emit TypeScript `any` for a bare PHP
 `array` or `object` body or return value: the shape is unknown and
@@ -230,9 +231,9 @@ value, including `undefined`, is actually possible. The fallback
 needs a separate change in the SPA-Serve generator.
 
 Use dedicated PHP DTO classes for specifically typed request/response
-shapes. A direct `string[]` input or output cannot be inferred
-from a bare PHP `array`; the text example uses `TextInput` and
-`TextResponse` instead.
+shapes. A direct `string[]` input or output cannot be inferred from a
+bare PHP `array`; `AnyCtrl` intentionally leaves elements untyped.
+`CalculateCtrl` illustrates the typed DTO alternative.
 
 ## Build and API contract
 
