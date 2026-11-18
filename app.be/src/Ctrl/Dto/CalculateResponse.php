@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Dto;
+namespace App\Ctrl\Dto;
 
 /** Typed result of the demonstration calculation. */
 final class CalculateResponse

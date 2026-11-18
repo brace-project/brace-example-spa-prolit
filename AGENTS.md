@@ -4,7 +4,8 @@
 
 | Path | Responsibility |
 |---|---|
-| `app.be/` | Brace/PHP routes, middleware, controllers, DTOs |
+| `app.be/` | Brace/PHP routes, middleware and controllers |
+| `app.be/src/Ctrl/Dto/` | Controller request/response DTOs (PSR-4: `App\\Ctrl\\Dto`) |
 | `app.fe/src/pages/` | Routed pages; page-local `dialogs/`, `elements/` |
 | `app.fe/src/dialogs/` | Shared dialogs |
 | `app.fe/src/elements/` | Shared Prolit Web Components |

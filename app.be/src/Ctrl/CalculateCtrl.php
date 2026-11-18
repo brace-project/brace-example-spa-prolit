@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Ctrl;
 
-use App\Dto\CalculateInput;
-use App\Dto\CalculatePostResponse;
-use App\Dto\CalculateResponse;
+use App\Ctrl\Dto\CalculateInput;
+use App\Ctrl\Dto\CalculatePostResponse;
+use App\Ctrl\Dto\CalculateResponse;
 use Brace\Router\Attributes\BraceRoute;
 
 final class CalculateCtrl

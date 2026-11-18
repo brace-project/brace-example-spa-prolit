@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Ctrl;
 
-use App\Dto\GreetingResponse;
+use App\Ctrl\Dto\GreetingResponse;
 use Brace\Router\Attributes\BraceRoute;
 
 final class GreetingCtrl

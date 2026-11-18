@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Dto;
+namespace App\Ctrl\Dto;
 
 /** JSON request payload for the configurable sum-of-squares route. */
 final class CalculateInput

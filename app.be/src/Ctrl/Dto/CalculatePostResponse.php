@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Dto;
+namespace App\Ctrl\Dto;
 
 /** Result of a typed calculate POST request. */
 final class CalculatePostResponse

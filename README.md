@@ -141,14 +141,14 @@ RUNTIME (DEV_MODE=0)
 │   ├── 10_middleware.php              # SPA shell and asset serving
 │   ├── 20_routes.php                  # API routes and stub generation
 │   └── src/
-│       ├── Ctrl/                      # HTTP controllers
-│       │   ├── GreetingCtrl.php       # GET greeting API
-│       │   └── CalculateCtrl.php      # GET + POST calculation API
-│       └── Dto/                       # Typed API request/response contracts
-│           ├── GreetingResponse.php
-│           ├── CalculateResponse.php
-│           ├── CalculateInput.php
-│           └── CalculatePostResponse.php
+│       └── Ctrl/                      # HTTP controllers
+│           ├── GreetingCtrl.php       # GET greeting API
+│           ├── CalculateCtrl.php      # GET + POST calculation API
+│           └── Dto/                   # Controller request/response DTOs
+│               ├── GreetingResponse.php
+│               ├── CalculateResponse.php
+│               ├── CalculateInput.php
+│               └── CalculatePostResponse.php
 ├── app.fe/                            # Prolit frontend
 │   ├── src/
 │   │   ├── main.ts                    # Register elements and start router
