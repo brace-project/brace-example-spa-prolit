@@ -20,32 +20,52 @@ pnpm dev
 
 ## Directory map
 
-| Path | Purpose |
-|---|---|
-| `bootstrap.php` | Shared bootstrap for CLI and web |
-| `app.be/01_init.php` | Brace environment and core modules |
-| `app.be/10_middleware.php` | SPA shell, middleware and static assets |
-| `app.be/20_routes.php` | Controller registration and API stub generator |
-| `app.be/src/Ctrl/` | PHP route controllers (`GreetingCtrl`, `CalculateCtrl`) |
-| `app.be/src/Dto/` | Typed API request and response DTOs |
-| `app.fe/src/main.ts` | Register elements and pages; start Router |
-| `app.fe/src/pages/` | Routed `*Page` components |
-| `app.fe/src/pages/<PageName>/` | Larger page with its own `<PageName>.ts` |
-| `app.fe/src/pages/<PageName>/dialogs/` | Dialogs used only by that page |
-| `app.fe/src/pages/<PageName>/elements/` | Elements used only by that page |
-| `app.fe/src/dialogs/` | Cross-page dialogs; `SettingsDialog.ts` demonstrates typed POST |
-| `app.fe/src/elements/` | Reusable Web Components |
-| `app.fe/src/app.scss` | Shared frontend styling |
-| `app.fe/src/generated-api.ts` | **Generated** typed API client; never edit |
-| `app.fe/dist/` | Production bundles; deploy, do not hand-edit |
-| `www/index.php` | Apache front controller |
-| `vite.config.ts`, `tsconfig.json` | Frontend tooling and type configuration |
+```text
+.
+├── bootstrap.php                     # Shared CLI/web bootstrap
+├── composer.json                      # PHP dependencies and PSR-4 mapping
+├── package.json                       # Frontend dependencies and scripts
+├── tsconfig.json                      # TypeScript configuration
+├── vite.config.ts                     # Development server and build
+├── app.be/                            # Brace backend
+│   ├── 01_init.php                    # App environment and modules
+│   ├── 10_middleware.php              # SPA shell and asset serving
+│   ├── 20_routes.php                  # API routes and stub generation
+│   └── src/
+│       ├── Ctrl/                      # HTTP controllers
+│       │   ├── GreetingCtrl.php       # GET greeting API
+│       │   └── CalculateCtrl.php      # GET + POST calculation API
+│       └── Dto/                       # Typed API request/response contracts
+│           ├── GreetingResponse.php
+│           ├── CalculateResponse.php
+│           ├── CalculateInput.php
+│           └── CalculatePostResponse.php
+├── app.fe/                            # Prolit frontend
+│   ├── src/
+│   │   ├── main.ts                    # Register elements and start router
+│   │   ├── app.scss                   # Shared styles
+│   │   ├── generated-api.ts           # Generated; never edit
+│   │   ├── pages/                     # Routable Web Components
+│   │   │   ├── HomePage/
+│   │   │   │   └── HomePage.ts
+│   │   │   └── FormExamplePage/
+│   │   │       ├── FormExamplePage.ts
+│   │   │       └── dialogs/           # Page-local dialogs
+│   │   │           └── FormExampleDialog.ts
+│   │   ├── dialogs/                   # Shared dialogs
+│   │   │   └── SettingsDialog.ts      # Typed POST example
+│   │   └── elements/                  # Reusable Web Components
+│   │       └── CalculateDemoElement.ts # Async GET example
+│   └── dist/                           # Production build output
+└── www/
+    └── index.php                      # Apache front controller
+```
 
-Small pages may remain a single `pages/XPage.ts` file. When a page
-needs local dialogs or elements, move it to `pages/XPage/XPage.ts`.
-Keep page-specific code next to its owner; promote components to the
-global `dialogs/` or `elements/` folders when shared. Names of
-category folders are lower-case plurals; component classes use PascalCase.
+Small pages can be a single file under `pages/`. For larger pages,
+colocate page-only dialogs/elements under
+`pages/<PageName>/dialogs/` and `pages/<PageName>/elements/`;
+shared components go into top-level `dialogs/` or `elements/`.
+Folder names are lowercase plurals; component classes use PascalCase.
 
 ## API demos
 
