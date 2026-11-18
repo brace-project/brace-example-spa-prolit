@@ -23,7 +23,7 @@ export class CalculateDemoElement extends ProlitElement {
     `,
 
     calculation: scopeResource<CalculateResponse, []>({
-      load: ({ signal }) => API.Demo.CalculatePost.request({ body: { count: 1000, multiplier: 1, label: 'Demo' }, options: { signal } }),
+      load: ({ signal }) => API.Demo.Calculate.request({ body: { count: 1000, multiplier: 1, label: 'Demo' }, options: { signal } }),
       retainData: false,
       errorMessage: 'Calculation failed.',
     }),

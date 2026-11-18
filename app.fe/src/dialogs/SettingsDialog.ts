@@ -69,7 +69,7 @@ export class SettingsDialog extends ProlitDialogElement<{ count: number }, Calcu
         this.scope.error = '';
 
         try {
-          this.scope.result = await API.Demo.CalculatePost.request({ body });
+          this.scope.result = await API.Demo.Calculate.request({ body });
         } catch (error) {
           this.scope.error = error instanceof Error ? error.message : 'Calculation failed.';
         } finally {

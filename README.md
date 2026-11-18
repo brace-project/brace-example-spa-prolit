@@ -70,7 +70,7 @@ app.be/ named #[BraceRoute] + Ctrl + Dto
                   |
                   v
      Vite module update / frontend imports
-     (e.g. API.Demo.CalculatePost.request({ body }))
+     (e.g. API.Demo.Calculate.request({ body }))
 ```
 
 - The **backend** `app.be/` is watched to regenerate the API
@@ -182,8 +182,8 @@ Folder names are lowercase plurals; component classes use PascalCase.
 | Example | Frontend | Backend |
 |---|---|---|
 | Greeting | `pages/HomePage/HomePage.ts` | `GreetingCtrl::get` → `Demo.Greeting` |
-| Calculation (POST) | `elements/CalculateDemoElement.ts` | `CalculateCtrl::post` → `Demo.CalculatePost` |
-| Calculation settings | `dialogs/SettingsDialog.ts` | `CalculateCtrl::post` → `Demo.CalculatePost` |
+| Calculation (POST) | `elements/CalculateDemoElement.ts` | `CalculateCtrl::post` → `Demo.Calculate` |
+| Calculation settings | `dialogs/SettingsDialog.ts` | `CalculateCtrl::post` → `Demo.Calculate` |
 | String array POST | `dialogs/SettingsDialog.ts` | `TextCtrl::post` → `Demo.JoinStrings` |
 | Form and modal | `pages/FormExamplePage/` | Client-side Prolit state and dialog |
 

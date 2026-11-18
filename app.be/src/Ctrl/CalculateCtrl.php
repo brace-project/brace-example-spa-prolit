@@ -23,7 +23,7 @@ final class CalculateCtrl
      * @see CalculateInput
      * @see CalculateResponse
      */
-    #[BraceRoute('POST@/calculate', name: 'Demo.CalculatePost')]
+    #[BraceRoute('POST@/calculate', name: 'Demo.Calculate')]
     public function post(CalculateInput $body): CalculateResponse
     {
         if ($body->count < 1 || $body->count > 1000) {
