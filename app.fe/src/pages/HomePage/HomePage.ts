@@ -19,6 +19,7 @@ export class HomePage extends ProlitElement {
               the TypeScript client generated from the Brace controller.
             </p>
             <p><a href="/form-example">Open the form, events, table and popup example →</a></p>
+            <button type="button" @click="$fn.openSettings()">Open calculation settings (POST)</button>
             <button @click="greeting.reload()" ?disabled="greeting.pending">Reload backend greeting</button>
             <p *if="greeting.pending" role="status">Loading from Brace…</p>
             <p *if="greeting.error" role="alert">{{ greeting.error.message }}</p>
@@ -46,6 +47,12 @@ export class HomePage extends ProlitElement {
       retainData: false,
       errorMessage: 'Greeting could not be loaded.',
     }),
+    $fn: {
+      openSettings: async (): Promise<void> => {
+        const { SettingsDialog } = await import('../../dialogs/SettingsDialog');
+        await SettingsDialog.show({ count: 5 });
+      },
+    },
     $hooks: {
       $connect: (): void => {
         void this.scope.greeting.reload();

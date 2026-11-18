@@ -27,13 +27,13 @@ pnpm dev
 | `app.be/10_middleware.php` | SPA shell, middleware and static assets |
 | `app.be/20_routes.php` | Controller registration and API stub generator |
 | `app.be/src/Ctrl/` | PHP route controllers (`GreetingCtrl`, `CalculateCtrl`) |
-| `app.be/src/Dto/` | API response DTOs |
+| `app.be/src/Dto/` | Typed API request and response DTOs |
 | `app.fe/src/main.ts` | Register elements and pages; start Router |
 | `app.fe/src/pages/` | Routed `*Page` components |
 | `app.fe/src/pages/<PageName>/` | Larger page with its own `<PageName>.ts` |
 | `app.fe/src/pages/<PageName>/dialogs/` | Dialogs used only by that page |
 | `app.fe/src/pages/<PageName>/elements/` | Elements used only by that page |
-| `app.fe/src/dialogs/` | Cross-page dialogs (create when needed) |
+| `app.fe/src/dialogs/` | Cross-page dialogs; `SettingsDialog.ts` demonstrates typed POST |
 | `app.fe/src/elements/` | Reusable Web Components |
 | `app.fe/src/app.scss` | Shared frontend styling |
 | `app.fe/src/generated-api.ts` | **Generated** typed API client; never edit |
@@ -52,7 +52,8 @@ category folders are lower-case plurals; component classes use PascalCase.
 | Example | Frontend | Backend |
 |---|---|---|
 | Greeting | `pages/HomePage/HomePage.ts` | `GreetingCtrl::get` → `Demo.Greeting` |
-| Calculation | `elements/CalculateDemoElement.ts` | `CalculateCtrl::get` → `Demo.Calculate` |
+| Calculation (GET) | `elements/CalculateDemoElement.ts` | `CalculateCtrl::get` → `Demo.Calculate` |
+| Calculation (POST) | `dialogs/SettingsDialog.ts` | `CalculateCtrl::post` → `Demo.CalculatePost` |
 | Form and modal | `pages/FormExamplePage/` | Client-side Prolit state and dialog |
 
 The calculation Web Component calls the **generated** API client with
@@ -60,6 +61,13 @@ The calculation Web Component calls the **generated** API client with
 reload and passes the request's abort signal. The endpoint sums
 `1² + ... + 1000² = 333833500`; its fixed 700 ms delay is for
 demonstration, not a CPU benchmark.
+
+Open **Calculation settings (POST)** on the homepage to send
+`{ "count": 5 }` through `API.Demo.CalculatePost.request({ body })`.
+`CalculateInput` and `CalculatePostResponse` are separate PHP DTOs;
+valid input (1–1000) returns `sumOfSquares` (5 → 55). The dialog displays
+pending, result and error states. This client needs the POST-body codegen
+change in `brace-project/brace-mod-spaserve` PR #8.
 
 ## Build and API contract
 

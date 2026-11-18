@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Ctrl;
 
+use App\Dto\CalculateInput;
+use App\Dto\CalculatePostResponse;
 use App\Dto\CalculateResponse;
 use Brace\Router\Attributes\BraceRoute;
 
@@ -35,6 +37,40 @@ final class CalculateCtrl
 
         $response = new CalculateResponse();
         $response->count = 1000;
+        $response->sumOfSquares = $sum;
+        $response->processingMs = (int) round((hrtime(true) - $startedAt) / 1_000_000);
+
+        return $response;
+    }
+
+    /**
+     * Sums the requested number of squares from a typed JSON POST body.
+     *
+     * Supports 1 to 1000 terms and has no persistent side effects.
+     *
+     * @param CalculateInput $body Input DTO, e.g. {"count": 5}.
+     * @return CalculatePostResponse For count 5, returns sumOfSquares = 55.
+     * @throws \InvalidArgumentException If count is outside 1..1000.
+     * @example $body = new CalculateInput(); $body->count = 5; $result = (new CalculateCtrl())->post($body);
+     * @see CalculateInput
+     * @see CalculatePostResponse
+     */
+    #[BraceRoute('POST@/calculate', name: 'Demo.CalculatePost')]
+    public function post(CalculateInput $body): CalculatePostResponse
+    {
+        if ($body->count < 1 || $body->count > 1000) {
+            throw new \InvalidArgumentException('count must be between 1 and 1000');
+        }
+
+        $startedAt = hrtime(true);
+        $sum = 0;
+
+        for ($i = 1; $i <= $body->count; $i++) {
+            $sum += $i * $i;
+        }
+
+        $response = new CalculatePostResponse();
+        $response->count = $body->count;
         $response->sumOfSquares = $sum;
         $response->processingMs = (int) round((hrtime(true) - $startedAt) / 1_000_000);
 
