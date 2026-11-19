@@ -25,13 +25,23 @@ AppLoader::extend(function (BraceApp $app): void {
         devEntrypoint: '/src/main.ts',
     );
 
+    // Keep the public asset mount scoped to the generated build directory.
+    $assets = new SpaStaticFileServerMw(
+        bundleDir: __DIR__ . '/../app.fe/assets/dist',
+        html: $html,
+        mount: rtrim($app->url_prefix, '/') . '/assets',
+        excludePaths: [],
+        spaRoutes: [],
+    );
+
     $app->setPipe([
         new BodyMiddleware(),
         new ExceptionHandlerMiddleware(),
         new RouterEvalMiddleware(),
         new RouterDispatchMiddleware([new JsonReturnFormatter($app)]),
+        $assets,
         new SpaStaticFileServerMw(
-            bundleDir: __DIR__ . '/../app.fe/dist',
+            bundleDir: __DIR__ . '/../app.fe/assets/dist',
             html: $html,
             excludePaths: ['/api'],
         ),
