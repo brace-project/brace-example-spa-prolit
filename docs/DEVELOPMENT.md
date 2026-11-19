@@ -107,8 +107,8 @@ RUNTIME (DEV_MODE=0)
 
 - `DEV_MODE` selects the Brace application environment.
   SPA-Serve uses that environment automatically: development injects
-  the Vite client; production references prebuilt `assets/app.js`
-  and `assets/app.css` plus any lazy-loaded chunks.
+  the Vite client; production references prebuilt `dist/app.js`
+  and `dist/app.css` plus any lazy-loaded chunks.
 - Switching `DEV_MODE` does **not** compile assets; build and deploy
   `app.fe/assets/dist/` before serving production traffic.
 - Production needs Apache/PHP and the built assets, **not** a running
@@ -145,7 +145,7 @@ vendor/bin/brace spa-api-build
 
 The SPA-Serve `ViteAutoHtml` component selects the development script
 entrypoint (`/src/main.ts` plus Vite client) or the built
-`assets/app.js` / `assets/app.css` references according to the Brace
+`dist/app.js` / `dist/app.css` references according to the Brace
 environment. `SpaStaticFileServerMw` serves the built directory and SPA
 navigation while excluding `/api` so API calls reach the controllers.
 
