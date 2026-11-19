@@ -49,14 +49,14 @@ export default defineConfig({
     hmr: true,
   },
   build: {
-    outDir: 'dist',
+    outDir: 'assets/dist',
     emptyOutDir: true,
     rollupOptions: {
       input: fileURLToPath(new URL('./app.fe/src/main.ts', import.meta.url)),
       output: {
-        entryFileNames: 'assets/app.js',
-        chunkFileNames: 'assets/[name]-[hash].js',
-        assetFileNames: asset => asset.name?.endsWith('.css') ? 'assets/app.css' : 'assets/[name]-[hash][extname]',
+        entryFileNames: 'app.js',
+        chunkFileNames: '[name]-[hash].js',
+        assetFileNames: asset => asset.name?.endsWith('.css') ? 'app.css' : '[name]-[hash][extname]',
       },
     },
   },
