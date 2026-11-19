@@ -10,7 +10,7 @@
 | `app.fe/src/dialogs/` | Shared dialogs |
 | `app.fe/src/elements/` | Shared Prolit Web Components |
 | `app.fe/src/generated-api.ts` | Generated client; **never edit manually** |
-| `app.fe/dist/` | Build output; deploy the complete directory |
+| `app.fe/assets/dist/` | Build output; deploy the complete directory |
 | `www/index.php` | Apache front controller |
 
 - Keep small pages flat; give larger pages a same-named folder.
