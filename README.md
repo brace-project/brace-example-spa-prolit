@@ -41,7 +41,8 @@ Brace serves the SPA; Vite provides the frontend development server and builds.
 │   │   │   └── SettingsDialog.ts      # Typed POST example
 │   │   └── elements/                  # Reusable Web Components
 │   │       └── CalculateDemoElement.ts # Async POST example
-│   └── dist/                           # Production build output
+│   └── assets/
+│       └── dist/                      # Production build output
 └── www/
     └── index.php                      # Apache front controller
 ```
@@ -62,7 +63,7 @@ pnpm dev
 
 Open `http://localhost:4000/` with Apache/PHP available on port 80.
 Vite serves frontend source files and forwards application/API requests to Brace.
-For production, run `pnpm build` and serve `app.fe/dist/` through Apache
+For production, run `pnpm build` and serve `app.fe/assets/dist/` through Apache
 with `DEV_MODE=0` (Vite is not needed at runtime).
 
 **Details:** [Development, Vite, SPA-Serve and production build](docs/DEVELOPMENT.md).

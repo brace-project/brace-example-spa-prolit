@@ -33,7 +33,7 @@
 /vendor
 /node_modules
 /composer.lock
-/app.fe/dist
+/app.fe/assets/dist
 /app.fe/src/generated-api.ts
 
 ## Never commit worspaces
