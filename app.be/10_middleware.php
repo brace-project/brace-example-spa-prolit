@@ -19,8 +19,8 @@ AppLoader::extend(function (BraceApp $app): void {
     $html = new ViteAutoHtml(
         apiBaseUrl: \CONF_API_BASE_URL,
         title: 'Brace + Prolit Example',
-        css: ['assets/app.css'],
-        javascript: ['assets/app.js'],
+        css: ['assets/dist/app.css'],
+        javascript: ['assets/dist/app.js'],
         startHtml: '<nte-feedback></nte-feedback><tj-responsive><router-content></router-content></tj-responsive>',
         devEntrypoint: '/src/main.ts',
     );
@@ -31,7 +31,7 @@ AppLoader::extend(function (BraceApp $app): void {
         new RouterEvalMiddleware(),
         new RouterDispatchMiddleware([new JsonReturnFormatter($app)]),
         new SpaStaticFileServerMw(
-            bundleDir: __DIR__ . '/../app.fe/assets',
+            rootDir: __DIR__ . '/../app.fe',
             html: $html,
             excludePaths: ['/api'],
         ),
