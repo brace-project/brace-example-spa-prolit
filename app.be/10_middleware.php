@@ -28,7 +28,7 @@ AppLoader::extend(function (BraceApp $app): void {
     // Keep the public asset mount scoped to the generated build directory.
     $assets = new SpaStaticFileServerMw(
         bundleDir: __DIR__ . '/../app.fe/assets/dist',
-        html: $html,
+        html: new ViteAutoHtml(),
         mount: rtrim($app->url_prefix, '/') . '/assets',
         excludePaths: [],
         spaRoutes: [],
