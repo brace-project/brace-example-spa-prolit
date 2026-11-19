@@ -98,3 +98,46 @@ The form example demonstrates live `nte-input` bindings, editing
 `nte-data-table` rows and event output. API requests use the central
 `nte-feedback` loading indicator, which stays open until all concurrent
 requests finish. The home page includes a theme switch.
+
+## Frontend conventions for contributors and coding agents
+
+Use **Nextstrap as the single source for UI appearance**. Before building a control or styling a page, check the installed `@nextrap/style-*` packages and NTE components; reuse their semantic classes, utilities and CSS variables rather than introducing independent component CSS, new colors/spacing scales or bespoke controls. `app.fe/src/app.scss` assembles the Nextstrap styles; `app.fe/src/main.ts` registers NTE components. The form page is a practical reference for `nte-input` and `nte-data-table`; the home page shows button and switch styles. Existing inline styles do not automatically justify further one-off styling. **When Nextstrap lacks the needed style/component, or implementing it would require manual CSS, ask the maintainer before proceeding** and clarify whether Nextstrap should be extended or an explicit project-local exception is acceptable.
+
+### Responsive layout with TrunkJS
+
+`@trunkjs/responsive` is already imported in `app.fe/src/main.ts`. For responsive behavior, use its breakpoint-prefixed **existing Nextstrap utility classes** and `style-{breakpoint}` attributes, not custom resize listeners or one-off CSS media queries. The application content must be wrapped by `<tj-responsive>` in the rendered document; verify this when modifying its HTML shell.
+
+```html
+<tj-responsive>
+  <div class="d-block md:d-flex gap-3">
+    <aside class="-md:d-none md:d-block">Sidebar</aside>
+    <main style="width:100%" style-lg="width:75%">Content</main>
+  </div>
+</tj-responsive>
+```
+
+`-md:` means below `md`, `md:` means from `md` upwards, and `md-xl:` applies from `md` up to (but excluding) `xl`. Defaults: `sm=576px`, `md=768px`, `lg=992px`, `xl=1200px`, `xxl=1400px`. Prefer reusable classes and tokens; use responsive inline styles only for element-specific values. Runtime arbitrary-value classes (such as `md:width-[50%]`) are exceptional fallbacks, not substitutes for recurring Nextstrap utilities. See the [responsive documentation](https://github.com/trunkjs/trunkjs-monorepo/blob/main/packages/responsive/README.md) and [agent usage guide](https://github.com/trunkjs/trunkjs-monorepo/blob/main/packages/responsive/.ai-usage-info.md).
+
+### Central feedback with NTE Feedback
+
+Mount `<nte-feedback></nte-feedback>` **once** in the application shell and use the static API from `@nextrap/nte-feedback`. Do not use browser `alert()` / `confirm()`, homemade toast/dialog feedback or manually dispatched `nextrap:*` events for ordinary app interactions.
+
+```ts
+import { Feedback } from '@nextrap/nte-feedback';
+import { requestFeedback } from './requestFeedback';
+
+// Standard API request: shared loading indicator also handles concurrent requests.
+const result = await requestFeedback(() => fetchSomething());
+
+// For an explicit user-facing outcome:
+await Feedback.success('Saved.');
+await Feedback.error({ message: 'Save failed.', autoClose: false });
+if (await Feedback.confirm('Delete this item?')) {
+  // perform deletion
+}
+await Feedback.alert('Operation completed.');
+```
+
+`requestFeedback()` in `app.fe/src/requestFeedback.ts` calls `Feedback.loading()` for the first in-flight backend request and `Feedback.close()` in a `finally` block when **all** concurrent requests finish. It does not turn API failures into success: callers must still handle/display errors appropriately. Use `Feedback.progress()` for measurable work and `Feedback.info()` for informational messages. Opening feedback calls are awaitable and resolve when closed; do not unnecessarily await a blocking loading indicator before performing the work. See the [NTE Feedback README](https://github.com/nextrap/nextrap-monorepo/blob/main/nextrap-elements/nte-feedback/README.md).
+
+**Agent checklist:** review relevant Nextstrap/NTE APIs and existing project examples; choose reusable UI classes/components; use TrunkJS responsive directives; route user feedback through NTE Feedback; ask before manually adding missing styles; verify mobile/desktop layouts and loading, error and confirmation paths. See [AGENTS.md](AGENTS.md) for the binding project rules.
